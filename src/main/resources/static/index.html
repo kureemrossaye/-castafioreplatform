@@ -13,11 +13,17 @@
 
 <body>
 	<div id="os"></div>
-	
+
 	<script>
-			$(document).ready(function(){
-				$('#os').castafiore('os');
-			});
-		</script>
+		$(document).ready(function() {
+			
+			
+			var app = getParameterByName("app");
+			
+			$('<div></div>').attr('id', app).appendTo($('body'));
+			
+			$('#' + app).castafiore(app);
+		});
+	</script>
 </body>
 </html>
