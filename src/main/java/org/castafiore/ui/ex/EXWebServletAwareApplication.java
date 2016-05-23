@@ -7,6 +7,11 @@ import org.castafiore.ui.WebServletAwareApplication;
 
 public abstract class EXWebServletAwareApplication extends EXApplication implements WebServletAwareApplication{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public EXWebServletAwareApplication(String name) {
 		super(name);
 	}

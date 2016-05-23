@@ -131,6 +131,7 @@ event.type.21=ready
 	}
 	
 	
+	@SuppressWarnings("rawtypes")
 	public static Event getEvent(final String methodName, final Class ancestor, final Class ancestorToMask){
 		Event event = new Event(){
 
@@ -152,13 +153,14 @@ event.type.21=ready
 					
 					//String clazz = container.getAttribute("ancestor");
 					//Class<Container> cls = (Class<Container>) Thread.currentThread().getContextClassLoader().loadClass(ancestor);
+					@SuppressWarnings("unchecked")
 					Object panel = container.getAncestorOfType(ancestor);
 					Method method = null;
 					try{
 						method = panel.getClass().getMethod(methodName, Container.class);
 						method.invoke(panel, container);
 					}catch(NoSuchMethodException nse){
-						panel.getClass().getMethod(methodName, null).invoke(panel, null);
+						panel.getClass().getMethod(methodName, (Class<?>[])null).invoke(panel, (Object[])null);
 					}
 					
 				}catch(Exception e){
@@ -189,6 +191,7 @@ event.type.21=ready
 			
 		}
 
+		@SuppressWarnings("unchecked")
 		public boolean ServerAction(Container container,
 				Map<String, String> request) throws UIException {
 			
@@ -202,7 +205,7 @@ event.type.21=ready
 					method = panel.getClass().getMethod(methodName, Container.class);
 					method.invoke(panel, container);
 				}catch(NoSuchMethodException nse){
-					panel.getClass().getMethod(methodName, null).invoke(panel, null);
+					panel.getClass().getMethod(methodName, (Class[])null).invoke(panel,(Object[]) null);
 				}
 				
 			}catch(Exception e){
@@ -214,8 +217,6 @@ event.type.21=ready
 
 		public void Success(JQuery container, Map<String, String> request)
 				throws UIException {
-			// TODO Auto-generated method stub
-			
 		}
 		
 	};

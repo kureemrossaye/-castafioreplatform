@@ -19,6 +19,7 @@ package org.castafiore.web.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -45,15 +46,20 @@ import org.castafiore.resource.BinaryFileData;
 import org.castafiore.resource.FileData;
 import org.castafiore.ui.Application;
 import org.castafiore.ui.ApplicationRegistry;
+import org.castafiore.ui.Container;
 import org.castafiore.ui.UIException;
 import org.castafiore.ui.engine.CastafioreEngine;
 import org.castafiore.ui.engine.context.CastafioreApplicationContextHolder;
 import org.castafiore.ui.ex.form.EXUpload;
 import org.castafiore.ui.interceptors.InterceptorRegistry;
+import org.castafiore.ui.js.JSObject;
 import org.castafiore.utils.ChannelUtil;
 import org.castafiore.utils.ComponentUtil;
 import org.castafiore.utils.IOUtil;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -69,7 +75,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(value="/castafiore")
-public class CastafioreController implements ResourceLoaderAware {
+public class CastafioreController implements ResourceLoaderAware, ApplicationContextAware {
 	
 	@Autowired
 	private ApplicationRegistry applicationRegistry;
@@ -79,6 +85,8 @@ public class CastafioreController implements ResourceLoaderAware {
 	private InterceptorRegistry interceptorRegistry;
 	
 	private ResourceLoader resourceLoader;
+	
+	private ApplicationContext context;
 
 
 	public ApplicationRegistry getApplicationRegistry() {
@@ -101,12 +109,11 @@ public class CastafioreController implements ResourceLoaderAware {
 	}
 
 
-	@SuppressWarnings("unchecked")
-	private Map<String, String> getParameterMap(Map parameters)
+	private Map<String, String> getParameterMap(Map<?,?> parameters)
 	{
 		
 		Map<String, String> result = new HashMap<String, String>(parameters.size());
-		Iterator iter = parameters.keySet().iterator();
+		Iterator<?> iter = parameters.keySet().iterator();
 		
 		while(iter.hasNext())
 		{
@@ -128,7 +135,7 @@ public class CastafioreController implements ResourceLoaderAware {
 	private  FileData getNewInstance(){
 		try
 		{
-			Class cls = Thread.currentThread().getContextClassLoader().loadClass("org.castafiore.wfs.types.BinaryFile");
+			Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass("org.castafiore.wfs.types.BinaryFile");
 			return (FileData)cls.newInstance();
 		}
 		catch(ClassNotFoundException e){
@@ -235,7 +242,7 @@ public class CastafioreController implements ResourceLoaderAware {
 			upload.setProgressListener(listener);
 			
 			
-			Iterator iter =upload.parseRequest(request).iterator();
+			Iterator<?> iter =upload.parseRequest(request).iterator();
 			//FileItemIterator iter = upload.getItemIterator(request);
 			String applicationId = null;
 	    	String componentId = null;
@@ -268,7 +275,6 @@ public class CastafioreController implements ResourceLoaderAware {
 			    	File savedFile = new File("/" +new Date().getTime() + "_" + item.getName()); //new File(request.getRealPath("/")+"uploadedFiles/"+name);
 			    	
 			    	item.write(savedFile);
-			    	String contentType = item.getContentType();
 			    				    	
 			    	bFile = getNewInstance();
 			    	bFile.setUrl(savedFile.getAbsolutePath());
@@ -421,11 +427,70 @@ public class CastafioreController implements ResourceLoaderAware {
 				throw new UIException("unable to load resource with the specification " + spec ,e);
 		}
 	}
+	
+	
+	@RequestMapping(value="/methods")
+	public void doMethod( HttpServletRequest request, HttpServletResponse response)throws Exception{
+		if(request.getParameter("controller") != null){
+			String controller = request.getParameter("controller");
+			
+			 org.springframework.web.servlet.mvc.Controller c = (org.springframework.web.servlet.mvc.Controller)context.getBean(controller);
+			 c.handleRequest(request, response);
+			 return;
+		}
+		
+		
+		String applicationid  = request.getParameter("applicationid");
+		String componentid = request.getParameter("componentid");
+		String methodName = request.getParameter("method");
+		String param = request.getParameter("paramName")!= null? request.getParameter(request.getParameter("paramName")):null;
+		try
+		{
+			
+			
+			Application applicationInstance = (Application) ((HttpServletRequest)request).getSession().getAttribute(applicationid);
+			Container c = ComponentUtil.getContainerById(applicationInstance, componentid);
+			if(c instanceof org.springframework.web.servlet.mvc.Controller){
+				((org.springframework.web.servlet.mvc.Controller)c).handleRequest(request, response);
+				return;
+			}
+			
+			Object o = c.getClass().getMethod(methodName, String.class).invoke(c, param);
+			if(o != null){
+				if(o instanceof InputStream){  
+					ChannelUtil.TransferData((InputStream)o, response.getOutputStream());
+					response.getOutputStream().flush();
+				}else if(o instanceof JSObject){
+					response.getOutputStream().write(((JSObject)o).getJavascript().getBytes());
+					response.getOutputStream().flush();
+				}else{
+					response.getOutputStream().write(o.toString().getBytes());
+					response.getOutputStream().flush();
+				}
+				
+				//response.setContentType(MimeUtility);
+				((HttpServletResponse)response).setHeader("Content-Disposition", "filename=" + methodName.replace("_", ".")); 
+			}
+
+			
+		}
+		catch(Exception e)
+		{
+			throw new ServletException("unable to load method since the params passed are not correct" ,e);
+		}
+	}
 
 
 	@Override
 	public void setResourceLoader(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;
+		
+	}
+
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.context = applicationContext;
 		
 	}
 }

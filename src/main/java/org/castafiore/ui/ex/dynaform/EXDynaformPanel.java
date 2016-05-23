@@ -9,16 +9,16 @@ import org.castafiore.ui.Container;
 import org.castafiore.ui.StatefullComponent;
 import org.castafiore.ui.ex.EXContainer;
 import org.castafiore.ui.ex.form.button.Button;
-import org.castafiore.ui.ex.panel.EXPanel;
+import org.castafiore.ui.ex.panel.EXModal;
 import org.castafiore.utils.ComponentUtil;
-
-public class EXDynaformPanel extends EXPanel implements DynaForm {
+@SuppressWarnings("rawtypes")
+public class EXDynaformPanel extends EXModal implements DynaForm {
 
 	private EXFieldSet body = null;
 
 	public EXDynaformPanel(String name, String title, int columns) {
 		super(name, title);
-
+		addClass(getClass().getSimpleName());
 		body = new EXFieldSet(name, title, columns);
 		body.setShowTitle(false);
 		setBody(body);
@@ -31,8 +31,7 @@ public class EXDynaformPanel extends EXPanel implements DynaForm {
 
 	public DynaForm addButton(Button button) {
 		setShowFooter(true);
-		button.setStyle("margin", "0 3px");
-		getFooterContainer().addChild(button);
+		getFooter().addChild(button);
 		return this;
 	}
 
@@ -64,15 +63,7 @@ public class EXDynaformPanel extends EXPanel implements DynaForm {
 
 	public Map<String, StatefullComponent> getFieldsMap() {
 		Map<String, StatefullComponent> result = new HashMap<String, StatefullComponent>();
-//		List<Container> children = getBody().getChildren();
-//		for (Container c : children) {
-//			StatefullComponent stf = c
-//					.getDescendentOfType(StatefullComponent.class);
-//			if (stf != null) {
-//				result.put(stf.getName(), stf);
-//			}
-//		}
-//		return result;
+
 		for(StatefullComponent stf : this.body.getFields()){
 			result.put(stf.getName(), stf);
 		}
@@ -111,12 +102,16 @@ public class EXDynaformPanel extends EXPanel implements DynaForm {
 		return result;
 	}
 
+	
+	@SuppressWarnings("unchecked")
 	public List<Button> getButtons() {
-		Container footer = getFooterContainer();
+		Container footer = getFooter();
 		List result = new ArrayList();
 		ComponentUtil.getDescendentsOfType(footer, result, Button.class);
 
 		return result;
 	}
+	
+
 
 }

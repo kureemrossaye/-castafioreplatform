@@ -34,6 +34,7 @@ import org.castafiore.ui.ex.layout.Layout;
  *          kureem@gmail.com
  * Oct 22, 2008
  */
+@SuppressWarnings({ "deprecation" })
 public class EXRadio<T> extends AbstractEXList<T>  {
 	
 	private final static Event SETVALUE_EVENT = new Event(){
@@ -137,6 +138,7 @@ public class EXRadio<T> extends AbstractEXList<T>  {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ListItem<T> getItem(int index) {
 		return (ListItem<T>)getChildByIndex(index);

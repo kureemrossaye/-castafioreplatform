@@ -3,11 +3,14 @@ package org.castafiore.ui.interceptors;
 import java.util.List;
 import java.util.Map;
 
+import org.castafiore.ui.Asynchronous;
 import org.castafiore.ui.Container;
 import org.castafiore.ui.UIException;
 import org.castafiore.ui.engine.JQuery;
 import org.castafiore.ui.events.Event;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AsynchronousInterceptor implements Interceptor{
 	
 	private static Event R = new Event() {
@@ -15,7 +18,6 @@ public class AsynchronousInterceptor implements Interceptor{
 		@Override
 		public void Success(JQuery container, Map<String, String> request)
 				throws UIException {
-			// TODO Auto-generated method stub
 			
 		}
 		
@@ -54,8 +56,12 @@ public class AsynchronousInterceptor implements Interceptor{
 
 	@Override
 	public Interceptor next() {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Class<? extends Container> getSupportedInterface() {
+		return Asynchronous.class;
 	}
 
 }

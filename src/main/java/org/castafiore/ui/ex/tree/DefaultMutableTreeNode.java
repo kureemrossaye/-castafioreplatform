@@ -28,6 +28,7 @@ import org.castafiore.ui.ex.EXContainer;
  *          kureem@gmail.com
  * Oct 22, 2008
  */
+@SuppressWarnings("rawtypes")
 public class DefaultMutableTreeNode implements TreeNode {
 
 	

@@ -38,6 +38,7 @@ import org.castafiore.utils.JavascriptUtil;
 public  class JMap implements JSObject, Serializable {
 	
 	
+	@SuppressWarnings("unchecked")
 	private Map<Object, String> internal_ = new ListOrderedMap();
 	
 	public void putAll(JMap map)
@@ -236,6 +237,7 @@ public  class JMap implements JSObject, Serializable {
 	
 	
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public JMap putAll(Map<String,?> map){
 		for(String key : map.keySet()){
 			Object val = map.get(key);

@@ -2,11 +2,9 @@ package org.castafiore;
 
 public class SimpleKeyValueType extends SimpleKeyValuePair implements KeyValueType{
 
+	private static final long serialVersionUID = 1L;
+	
 	private Types type;
-	
-	
-	
-	
 	
 	public SimpleKeyValueType() {
 		super();

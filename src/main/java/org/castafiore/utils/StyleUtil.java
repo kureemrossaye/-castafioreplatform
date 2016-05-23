@@ -70,6 +70,7 @@ public class StyleUtil {
 	}
 	
 	
+	@SuppressWarnings("static-access")
 	public static String getRandomColor(){
 		Integer red=  rand.nextInt(255);
 		Integer blie = rand.nextInt(255);

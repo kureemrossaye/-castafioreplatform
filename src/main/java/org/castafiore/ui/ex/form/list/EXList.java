@@ -73,10 +73,11 @@ public class EXList<T> extends AbstractEXList<T> implements ListItemRenderer<T>{
 			@Override
 			public boolean ServerAction(final Container container, Map<String, String> request)
 					throws UIException {
-				final EXList exList = container.getAncestorOfType(EXList.class);
+				final EXList<?> exList = container.getAncestorOfType(EXList.class);
 				exList.setAttribute("value", container.getName());
 				ComponentUtil.iterateOverDescendentsOfType(exList,EXListItem.class,new ComponentVisitor() {
 					
+					@SuppressWarnings({ "unchecked", "rawtypes" })
 					@Override
 					public void doVisit(Container c) {
 						exList.selectItem((EXListItem)c, c.getName().equalsIgnoreCase(container.getName()));
@@ -96,6 +97,7 @@ public class EXList<T> extends AbstractEXList<T> implements ListItemRenderer<T>{
 		}, Event.CLICK);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ListItem<T> getItem(int index) {
 		return (ListItem<T>)getChildByIndex(index).getChildByIndex(0);

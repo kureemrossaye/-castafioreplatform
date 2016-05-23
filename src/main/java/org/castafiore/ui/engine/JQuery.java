@@ -82,6 +82,7 @@ public final class JQuery implements Constant {
 	 * Creating a clientProxy using this constructor will not reflect any component in the Java DOM
 	 * @param selector
 	 */
+	@SuppressWarnings("unchecked")
 	public JQuery(String selector, ListOrderedMap buffer)
 	{
 		
@@ -115,6 +116,10 @@ public final class JQuery implements Constant {
 		return this;
 	}
 	
+	
+	
+	
+	
 	public JQuery(Var selector)
 	{
 		
@@ -132,12 +137,23 @@ public final class JQuery implements Constant {
 	}
 	
 	public  JQuery alert(String msg){
-		eval("alert('" + msg + "')");
+		eval("bootbox.alert('" + msg + "')");
 		return this;
 	}
 	
+	
+	
 	public  JQuery alert(Var var){
-		eval("alert(" + var.getJavascript()  + ")");
+		eval("bootbox.alert(" + var.getJavascript()  + ")");
+		return this;
+	}
+	
+	
+	public JQuery alert(String msg, JQuery callback){
+		
+		String js = "bootbox.alert('" + msg + "',function(){" + callback.getCompleteJQuery() + "})";
+		eval(js);
+		
 		return this;
 	}
 	/**
@@ -216,10 +232,11 @@ public final class JQuery implements Constant {
 	{
 		StringBuilder builder = new StringBuilder();
 		
-		Iterator selectors = buffer.keyList().iterator();
+		Iterator<?> selectors = buffer.keyList().iterator();
 		while(selectors.hasNext())
 		{
 			String selector = selectors.next().toString();
+			@SuppressWarnings("unchecked")
 			List<KeyValuePair> cmds = (List<KeyValuePair>)buffer.get(selector);
 			
 			builder.append(JQuery.getCurrentJQuery_(cmds, selector));
@@ -562,8 +579,7 @@ public final class JQuery implements Constant {
 	}
 	
 	
-	@SuppressWarnings("unchecked")
-	public JQuery getDescendentOfType(Class type)
+	public JQuery getDescendentOfType(Class<?> type)
 	{
 		if(container_ != null)
 		{
@@ -657,16 +673,6 @@ public final class JQuery implements Constant {
 		else if(previousSibbling!= null && previousSibbling.rendered())
 		{
 			builder.append(Constant.NO_CONFLICT + "(\"" + html + "\").attr({\""+ID_ATTR+"\":\""+componentId+"\"}).insertAfter("+Constant.NO_CONFLICT +"(\"" +ID_PREF+previousSibbling.getId()+"\"));");
-		}else if(false){
-			String s = "var _"+component.getId()+" = document.createElementNS(\"http://www.w3.org/2000/svg\", \""+component.getTag()+"\");";
-			s = s + "_"+component.getId()+".setAttributeNS(null,\"id\", \""+component.getId()+"\");";
-			if(StringUtil.isNotEmpty(component.getName())){
-				s = s + "_"+component.getId()+".setAttributeNS(null,\"name\", \""+component.getName()+"\");";
-			}
-			
-			s = s + "$(\"#"+component.getParent().getId()+"\")[0].appendChild(_"+component.getId()+");";
-			builder.append(s);
-			
 		}
 		//append to end in root
 		else
@@ -688,6 +694,9 @@ public final class JQuery implements Constant {
 	private static String combineForParams(String[] strings) {
 		String result = "";
 		for (String s : strings) {
+			if(s == null){
+				s= "";
+			}
 			if(!s.startsWith(Constant.NO_CONFLICT ))
 				result = result + "," + addQuote(s);
 			else
@@ -1286,7 +1295,7 @@ public final class JQuery implements Constant {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public JQuery getAncestorOfType(Class classType) 
+	public JQuery getAncestorOfType(@SuppressWarnings("rawtypes") Class classType) 
 	{
 		
 		Container c = container_.getAncestorOfType(classType);
@@ -1374,7 +1383,7 @@ public final class JQuery implements Constant {
 		if(ancestorId == null)
 			ancestorId = root.getId();
 		
-		String ancestor = ID_PREF + ancestorId;
+	//	String ancestor = ID_PREF + ancestorId;
 		
 		params.put("casta_applicationid", root.getName());
 		

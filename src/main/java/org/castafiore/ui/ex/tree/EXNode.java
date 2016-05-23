@@ -32,6 +32,7 @@ import org.castafiore.ui.ex.EXContainer;
  */
 public class EXNode extends EXContainer {
 
+	@SuppressWarnings("rawtypes")
 	private TreeNode node = null;
 
 	public static Event OPEN_CLOSE_EVENT = new Event() {
@@ -60,6 +61,7 @@ public class EXNode extends EXContainer {
 
 	};
 
+	@SuppressWarnings("rawtypes")
 	public EXNode(String name, TreeNode node) {
 		super(name, "li");
 		Container userObject = node.getComponent();
@@ -86,6 +88,7 @@ public class EXNode extends EXContainer {
 			if (getDescendentByName("ul") == null) {
 				EXContainer ul = new EXContainer("ul", "ul");
 				for (int i = 0; i < node.childrenCount(); i++) {
+					@SuppressWarnings("rawtypes")
 					TreeNode child = node.getNodeAt(i);
 					EXNode childNode = new EXNode("", child);
 					ul.addChild(childNode);
@@ -104,10 +107,12 @@ public class EXNode extends EXContainer {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public TreeNode getNode() {
 		return node;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void setNode(TreeNode node) {
 
 		this.node = node;

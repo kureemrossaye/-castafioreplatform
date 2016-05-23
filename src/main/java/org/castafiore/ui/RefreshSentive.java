@@ -23,7 +23,7 @@
  * @author kureem
  *
  */
-public interface RefreshSentive {
+public interface RefreshSentive extends Container{
 
 	
 	/**

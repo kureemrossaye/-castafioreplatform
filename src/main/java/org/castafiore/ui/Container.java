@@ -34,6 +34,7 @@ import org.castafiore.ui.js.JMap;
  * @param <T>
  */
 
+@SuppressWarnings("deprecation")
 public interface Container extends DynamicHTMLTag {
 	
 	

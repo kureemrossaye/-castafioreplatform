@@ -19,6 +19,7 @@ package org.castafiore.ui.html;
 
 import org.castafiore.ui.Component;
 import org.castafiore.ui.Container;
+import org.castafiore.ui.engine.JQuery;
 import org.castafiore.ui.js.Var;
 
 /**
@@ -37,6 +38,10 @@ public interface HTMLTag extends Component {
 	
 	public Container setText(String text);
 	
+	public JQuery getCommand();
+	
+	public Container addCommand(JQuery jquery);
+	public JQuery getJQuery();
 	/**
 	 * 
 	 * @return the tag name of the instance

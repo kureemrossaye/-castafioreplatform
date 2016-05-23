@@ -17,6 +17,8 @@
 
 package org.castafiore.ui.ex.form.table;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.castafiore.ui.Container;
@@ -55,6 +57,22 @@ public class EXTable extends EXContainer implements Table, Event
 	private Container thead = new EXContainer("thead", "thead");
 	
 	private String caption ="";
+	
+	private boolean selectByRow = true;
+	
+	private boolean selectByCell = false;
+	
+	private boolean multipleSelect = false;
+	
+	private boolean sortable = false;
+	
+	
+	private List<Integer[]> selectedRows = new LinkedList<Integer[]>();
+	
+	private List<Integer[]> selectedCells = new LinkedList<Integer[]>();
+	
+	private List<RowSelectionListener> rowSelectionListener = new LinkedList<RowSelectionListener>();
+	
 
 	public EXTable(String name, TableModel model)
 	{
@@ -72,11 +90,95 @@ public class EXTable extends EXContainer implements Table, Event
 		super(name, "table");
 		this.tableModel_ = model;
 		this.celleRendere_ = renderer;
-		//addClass("table");
 		addClass("table table-striped table-bordered table-hover");
 		this.refresh();
 		addEvent(this, MISC);
 
+	}
+	
+	public EXTable addRowSelectionListener(RowSelectionListener listener){
+		rowSelectionListener.add(listener);
+		return this;
+	}
+	
+	public EXTable setSelectByRow(boolean b){
+		selectByRow = b;
+		if(selectByRow){
+			selectByCell = false;
+		}
+		return this;
+	}
+	
+	public boolean isSelectByRow(){
+		return selectByRow;
+	}
+	
+	public boolean isSelectByCell(){
+		return selectByCell;
+	}
+	
+	public boolean isMultiSelect(){
+		return multipleSelect;
+	}
+	
+	public EXTable selectRow(int row, int page){
+		if(!isMultiSelect()){
+			this.selectedRows.clear();
+		}
+		
+		this.selectedRows.add(new Integer[]{row,page});
+		selectRow( tbody.getChildByIndex(row));
+		return this;
+	}
+	
+	public List<Integer[]> getSelectedRows(){
+		return this.selectedRows;
+	}
+	
+	
+	public EXTable deSelectRow(int row, int page){
+		for(Integer[] sel : selectedRows){
+			if(sel[0].intValue() == row && sel[1].intValue() == page){
+				selectedRows.remove(sel);
+			}
+		}
+		
+		Container c = tbody.getChildByIndex(row);
+		deSelectRow(c);
+		return this;
+	}
+	
+	public EXTable deSelectRow(Container row){
+		row.removeClass("success");
+		return this;
+	}
+	
+	
+	public EXTable selectCell(int col, int row, int page){
+		this.selectedCells.add(new Integer[]{col,row,page});
+		return this;
+	}
+	
+
+	public EXTable clearSelections(){
+		this.selectedCells.clear();
+		this.selectedRows.clear();
+		return this;
+	}
+	
+	
+	public EXTable setSelectByCell(boolean b){
+		selectByCell = b;
+		if(selectByCell){
+			selectByRow =false;
+		}
+		
+		return this;
+	}
+	
+	public EXTable setMultipleSelect(boolean b){
+		multipleSelect = b;
+		return this;
 	}
 	
 	public void refreshCell(int row, int col){
@@ -132,7 +234,9 @@ public class EXTable extends EXContainer implements Table, Event
 	
 	
 	public void createFooter(){
+		
 		Container tfoot = new EXContainer("footer", "tfoot");
+		
 		addChild(tfoot);
 		Container tr = new EXContainer("foot", "tr");
 		tfoot.addChild(tr);
@@ -191,11 +295,13 @@ public class EXTable extends EXContainer implements Table, Event
 		thead.getChild("header").addClass(sclass);
 	}
 	public void selectRow(Container row){
-		for(Container r : row.getParent().getChildren()){
-			r.removeClass("selected");
+		if(!multipleSelect){
+			for(Container r : row.getParent().getChildren()){
+				r.removeClass("success");
+			}
 		}
 		
-		row.addClass("selected");
+		row.addClass("success");
 	}
 	
 
@@ -220,11 +326,13 @@ public class EXTable extends EXContainer implements Table, Event
 			if (rows > size){
 				rows = size;
 			}
-		//	tbody = new EXAsynchronous("tbody", "tbody");
-			//addChild(tbody);
 			for (int i = 0; i < rows; i++)
 			{
 				Container row = new EXContainer("" + i, "tr");
+				
+				if(selectByRow){
+					row.addEvent(SELECT_ROW, CLICK);
+				}
 				
 				tbody.addChild(row);
 				for (int j = 0; j < colcount; j++){
@@ -232,6 +340,9 @@ public class EXTable extends EXContainer implements Table, Event
 					
 					Container td = new EXContainer("", "td").setStyle("display", getColumnTd(j).getStyle("display"));
 					row.addChild(td);
+					if(selectByCell){
+						td.addEvent(SELECT_CELL, CLICK);
+					}
 				}
 				
 			}
@@ -338,7 +449,6 @@ public class EXTable extends EXContainer implements Table, Event
 			return;
 		}
 		this.currentPage = page;
-		//Container tbody =  getChild("tbody");
 		int rowsPerpage = tableModel_.getRowsPerPage();
 		
 		int rowCount = tableModel_.getRowCount();
@@ -354,11 +464,12 @@ public class EXTable extends EXContainer implements Table, Event
 		
 		if(maxRow > rowCount)
 			rowsToShow = rowCount - ((page)*rowsPerpage);
-		
+		tbody.setAttribute("page", page + "");
 		for (int row = 0; row < rowsToShow; row++)
 		{
 			Container tr =  tbody.getChildByIndex(row);
-
+			
+			tr.setAttribute("row", row + "");
 			for (int col = 0; col < tableModel_.getColumnCount(); col++)
 			{
 				Container td = null;
@@ -366,7 +477,7 @@ public class EXTable extends EXContainer implements Table, Event
 				{
 					td = new EXContainer("", "td");
 					td.setStyle("display", getColumnTd(col).getStyle("display"));
-					tr.addChild(td);
+					tr.addChild(td.setAttribute("col", col +""));
 				}
 				else
 				{
@@ -406,6 +517,10 @@ public class EXTable extends EXContainer implements Table, Event
 					row.setRendered(false);
 				}
 			}
+		}
+		
+		for(Integer[] row : selectedRows){
+			selectRow(row[0],row[1]);
 		}
 	}
 
@@ -471,7 +586,7 @@ public class EXTable extends EXContainer implements Table, Event
 			String url = "jquery/jquery.bootpag.min.js";
 			query.getScript(url,bootpag);
 		}catch(Exception e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	
@@ -496,6 +611,16 @@ public class EXTable extends EXContainer implements Table, Event
 			}
 		}
 	}
+	
+	
+	public interface RowSelectionListener{
+		
+		public void onRowSelected(Table table, TableModel model, int row, int page);
+		
+		public void onRowDeSelected(Table table, TableModel model, int row, int page);
+	}
+	
+	
 	
 	public static class MakeSortable implements Event{
 
@@ -537,5 +662,68 @@ public class EXTable extends EXContainer implements Table, Event
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+	
+	private final static Event SELECT_ROW = new Event() {
+		
+		@Override
+		public void Success(JQuery container, Map<String, String> request) throws UIException {
+			
+		}
+		
+		@Override
+		public boolean ServerAction(Container container, Map<String, String> request) throws UIException {
+			if(container.getTag().equals("tr")){
+				int page = Integer.parseInt(container.getParent().getAttribute("page"));
+				int row = Integer.parseInt(container.getAttribute("row"));
+				
+				EXTable table = container.getAncestorOfType(EXTable.class);
+				if(container.getStyleClass().contains("success")){
+					table.deSelectRow(row,page);
+					for(RowSelectionListener l : container.getAncestorOfType(EXTable.class).rowSelectionListener ){
+						l.onRowDeSelected(table, table.getModel(), row, page);
+					}
+				}else{
+					table.selectRow(row, page);
+	
+					for(RowSelectionListener l : container.getAncestorOfType(EXTable.class).rowSelectionListener ){
+						l.onRowSelected(table, table.getModel(), row, page);
+					}
+				}
+			}
+			return true;
+		}
+		
+		@Override
+		public void ClientAction(JQuery container) {
+			container.server(this);
+		}
+	};
+	
+	
+	private final static Event SELECT_CELL = new Event() {
+		
+		@Override
+		public void Success(JQuery container, Map<String, String> request) throws UIException {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public boolean ServerAction(Container container, Map<String, String> request) throws UIException {
+			if(container.getTag().equals("tr")){
+				//row selected
+			}
+			return true;
+		}
+		
+		@Override
+		public void ClientAction(JQuery container) {
+			container.server(this);
+		}
+	};
+	
+	
 
 }

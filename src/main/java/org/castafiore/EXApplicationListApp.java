@@ -31,9 +31,10 @@ import org.springframework.context.ApplicationContextAware;
 
 public class EXApplicationListApp extends EXApplication implements ApplicationContextAware , TableModel, CellRenderer{
 	
+	private static final long serialVersionUID = 1L;
+	
 	private ApplicationContext context = null;
 	
-	//private Map<String, Application> apps = new HashMap<String, Application>();
 	private String[] apps;
 
 	public EXApplicationListApp() {

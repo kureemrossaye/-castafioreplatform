@@ -17,6 +17,7 @@
 
 package org.castafiore.ui.ex.form;
 
+import org.castafiore.ui.engine.JQuery;
 
 /**
  * 
@@ -78,7 +79,9 @@ public class EXInput extends AbstractStatefullComponent<String> {
 	@Override
 	public void setValue(String value) {
 		setAttribute("value", value);
-
+		JQuery jquery = getJQuery();
+		jquery.val(value);
+		addCommand(jquery);
 	}
 
 }

@@ -24,6 +24,7 @@ import org.castafiore.ui.Container;
 import org.castafiore.ui.Draggable;
 import org.castafiore.ui.events.AdvancedDraggableEvent;
 import org.castafiore.ui.events.Event;
+import org.springframework.stereotype.Component;
 /**
  * 
  * 
@@ -31,6 +32,7 @@ import org.castafiore.ui.events.Event;
  *          kureem@gmail.com
  * Oct 22, 2008
  */
+@Component
 public class DraggableInterceptor implements Interceptor {
 
 	
@@ -74,5 +76,11 @@ public class DraggableInterceptor implements Interceptor {
 		{
 			container.addEvent(new AdvancedDraggableEvent((Draggable)container), Event.READY);
 		}
+	}
+
+
+	@Override
+	public Class<? extends Container> getSupportedInterface() {
+		return Draggable.class;
 	}
 }

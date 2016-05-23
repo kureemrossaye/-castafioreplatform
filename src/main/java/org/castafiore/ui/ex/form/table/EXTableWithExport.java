@@ -8,8 +8,7 @@ public class EXTableWithExport extends EXContainer{
 	public EXTableWithExport(String name, TableModel model) {
 		super(name, "div");
 		EXTable table = new EXTable("table_" + name, model);
-		EXPagineableTable pTable = new EXPagineableTable("", table);
-		addChild(pTable);
+		addChild(table);
 		try{
 		
 		Container c = new EXContainer("", "fieldset");

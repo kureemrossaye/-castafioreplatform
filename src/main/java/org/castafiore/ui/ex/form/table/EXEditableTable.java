@@ -119,6 +119,7 @@ public class EXEditableTable extends EXTable implements Event{
 	}
 	
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void startEdit(int row, int col, int page, Container container){
 		Object value = super.tableModel_.getValueAt(col, row, page);
 		StatefullComponent sft = ((EditableCellRenderer)this.celleRendere_).getInputAt(row, col, page,(EditableTableModel)tableModel_ , this);

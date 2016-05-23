@@ -57,7 +57,7 @@ public class EXMultiFieldSet extends EXTabPanel implements TabModel{
 		}
 	}
 	
-	public void addField(String name, String label,StatefullComponent field){
+	public void addField(String name, String label,StatefullComponent<?> field){
 		for(EXFieldSet f : fieldsets){
 			if(f.getName().equals(name)){
 				f.addField(label, field);

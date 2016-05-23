@@ -34,6 +34,10 @@ import org.castafiore.ui.html.DynamicHTMLTag;
  */
 public abstract  class EXDynamicHTMLTag extends EXHtmlTag implements DynamicHTMLTag , Container
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Map<Integer, List<Event>> events = new LinkedHashMap<Integer, List<Event>>(0);
 
 	public EXDynamicHTMLTag(String name, String tagName) 
@@ -45,8 +49,10 @@ public abstract  class EXDynamicHTMLTag extends EXHtmlTag implements DynamicHTML
 	@Override
 	public void flush(int secretKey) 
 	{
+		
 		if(secretKey == 12031980)
 		{
+			super.flush(secretKey);
 			this.setRendered(true);
 		
 			this.changedAttributes_.clear();

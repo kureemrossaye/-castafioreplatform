@@ -36,10 +36,11 @@ import org.springframework.stereotype.Component;
 @Scope("session")
 public class StressTest extends EXApplication {
 	
+	private static final long serialVersionUID = 1L;
+	
 	public StressTest() {
 		super("os");
 		EXModal modal = new EXModal("modal", "This is a test modal");
-		//modal.setBody(new EXContainer("gg", "h1").setText("Sample Text"));
 		
 		addChild(modal);
 		modal.setBody(getTabs());
@@ -71,6 +72,11 @@ public class StressTest extends EXApplication {
 		final String[] labels = new String[]{"Main", "Description", "Permissions"};
 		panel.setModel(new TabModel() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public int size() {
 				return labels.length;
@@ -106,6 +112,11 @@ public class StressTest extends EXApplication {
 		
 		EXTable table = new EXTable("table", new TableModel() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
 				return false;

@@ -46,7 +46,7 @@ public class ComponentUtil {
 
 	public static int compcount = 0;
 	
-	public static void fastExtractComponents(Container container, List<StatefullComponent> result, List<Container> ccs, String componentId)
+	public static void fastExtractComponents(Container container, List<StatefullComponent<?>> result, List<Container> ccs, String componentId)
 	{
 		compcount++;
 		if(container == null)
@@ -55,7 +55,7 @@ public class ComponentUtil {
 		}
 		if(container instanceof StatefullComponent)
 		{
-			result.add((StatefullComponent)container);
+			result.add((StatefullComponent<?>)container);
 		}
 		if(container.getId().equals(componentId))
 		{
@@ -71,7 +71,7 @@ public class ComponentUtil {
 		}
 	}
 	
-	public static void getAllStatefullDescendents(Container container, List<StatefullComponent> result)
+	public static void getAllStatefullDescendents(Container container, List<StatefullComponent<?>> result)
 	{
 		if(container == null)
 		{
@@ -79,7 +79,7 @@ public class ComponentUtil {
 		}
 		if(container instanceof StatefullComponent)
 		{
-			result.add((StatefullComponent)container);
+			result.add((StatefullComponent<?>)container);
 		}
 		
 		Iterator<Container> iterChildre = container.getChildren().iterator();
@@ -92,7 +92,7 @@ public class ComponentUtil {
 	}
 	
 	
-	public static void iterateOverDescendentsOfType(Container container,  Class type,ComponentVisitor visitor){
+	public static void iterateOverDescendentsOfType(Container container,  Class<?> type,ComponentVisitor visitor){
 		
 		if(type.isAssignableFrom(container.getClass()))
 		{
@@ -110,7 +110,7 @@ public class ComponentUtil {
 		
 	}
 	
-	public static void getDescendentsOfType(Container container, List<Container> result, Class type)
+	public static void getDescendentsOfType(Container container, List<Container> result, Class<?> type)
 	{
 		if(type.isAssignableFrom(container.getClass()))
 		{
@@ -247,8 +247,8 @@ public class ComponentUtil {
 				//isnew = true;
 				
 			}
-			Map para = request.getParameterMap();
-			Iterator keys = para.keySet().iterator();
+			Map<?,?> para = request.getParameterMap();
+			Iterator<?> keys = para.keySet().iterator();
 			while(keys.hasNext()){
 				String key = keys.next().toString();
 				String val = request.getParameter(key);

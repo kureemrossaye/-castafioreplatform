@@ -97,8 +97,6 @@ public class EXTabPanel extends EXContainer implements TabPanel {
 			return;
 		}
 
-		//Container tabs = ComponentUtil.getContainer("tabs", "ul", null, null);
-		//tabs.addClass("nav").addClass("nav-tabs");
 		addChild(tabs);
 
 		int selectedTab = model.getSelectedTab();
@@ -122,7 +120,7 @@ public class EXTabPanel extends EXContainer implements TabPanel {
 				// content.setAttribute("class",
 				// TABS_SELECTED_TAB_CONTENT_STYLE);
 				content.setDisplay(true);
-				content.addChild(model.getTabContentAt(this, i));
+				content.addChild(model.getTabContentAt(this, i).setStyle("border-top", "none"));
 				content.setAttribute("init", "true");
 				tab.setAttribute("init", "true");
 				content.addClass("active");

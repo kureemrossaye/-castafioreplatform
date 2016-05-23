@@ -105,5 +105,8 @@ public interface Application extends Container  {
 	
 	
 	public String getRemoteAddress();
+	
+	
+	public <T> T getBean(Class<T> type);
 
 }

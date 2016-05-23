@@ -33,8 +33,10 @@ public class SpringInterceptorRegistry implements InterceptorRegistry , Applicat
 	
 	private ApplicationContext context_ = null;
 	
+	@SuppressWarnings("rawtypes")
 	private  Map<Class, Interceptor> registry = null;
 	
+	@SuppressWarnings("rawtypes")
 	private void init()
 	{
 		if(registry == null)
@@ -42,31 +44,21 @@ public class SpringInterceptorRegistry implements InterceptorRegistry , Applicat
 			registry = new HashMap<Class, Interceptor>();
 			Map beans = context_.getBeansOfType(Interceptor.class);
 			
-			//System.out.println(beans);
-			
 			
 			Iterator iter = beans.keySet().iterator();
 			
 			while(iter.hasNext())
 			{
 				String sClass = iter.next().toString();
+				Interceptor interceptor = (Interceptor)beans.get(sClass);
 				
-				try
-				{
-					Class c = Thread.currentThread().getContextClassLoader().loadClass(sClass);
-				
-					registry.put(c, (Interceptor)beans.get(sClass));
-				}
-				catch(ClassNotFoundException nfe)
-				{
-					
-				}
-				
+				registry.put(interceptor.getSupportedInterface(),interceptor );
 				
 			}
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Interceptor[] getInterceptors(Container container) {
 		init();
 		List<Interceptor> interceptors = new ArrayList<Interceptor>();

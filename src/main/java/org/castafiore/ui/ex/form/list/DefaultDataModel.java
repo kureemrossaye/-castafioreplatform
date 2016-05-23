@@ -52,6 +52,7 @@ public class DefaultDataModel<T> implements DataModel<T> {
 		return this;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public DefaultDataModel<T> addItem(T... oo){
 		if(oo != null){
 			for(T o :oo)

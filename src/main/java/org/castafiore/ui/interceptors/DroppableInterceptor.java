@@ -24,6 +24,7 @@ import org.castafiore.ui.Container;
 import org.castafiore.ui.Droppable;
 import org.castafiore.ui.events.AdvancedDroppableEvent;
 import org.castafiore.ui.events.Event;
+import org.springframework.stereotype.Component;
 /**
  * 
  * 
@@ -31,6 +32,7 @@ import org.castafiore.ui.events.Event;
  *          kureem@gmail.com
  * Oct 22, 2008
  */
+@Component
 public class DroppableInterceptor implements Interceptor{
 
 	
@@ -74,6 +76,12 @@ public class DroppableInterceptor implements Interceptor{
 		{
 			container.addEvent(new AdvancedDroppableEvent((Droppable)container), Event.READY);
 		}
+	}
+
+
+	@Override
+	public Class<? extends Container> getSupportedInterface() {
+		return Droppable.class;
 	}
 
 }

@@ -14,16 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
- package org.castafiore.context;
+ package org.castafiore.wfs.service;
 
 import java.io.Serializable;
 
-import org.springframework.web.context.support.XmlWebApplicationContext;
-
-public class SerializableWebApplicationContext extends XmlWebApplicationContext implements Serializable{
-
-	public SerializableWebApplicationContext() {
-		super();
-	}
+/**
+ * 
+ * @author Kureem Rossaye
+ *
+ */
+public interface LockedFilesRegistry extends Serializable {
+	
+	public boolean isLocked(String  path);
+	
+	public String isLockedBy(String path);
+	
+	public void releaseLock(String path);
+	
+	public void lockFile(String path, String lockRequester);
 
 }

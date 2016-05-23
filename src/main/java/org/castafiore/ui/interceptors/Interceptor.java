@@ -31,5 +31,8 @@ public interface Interceptor {
 	public boolean onRender(Container container);
 	
 	public Interceptor next();
+	
+	
+	public Class<? extends Container> getSupportedInterface();
 
 }

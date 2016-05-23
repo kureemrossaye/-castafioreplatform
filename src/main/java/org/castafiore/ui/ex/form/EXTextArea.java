@@ -17,6 +17,8 @@
 
 package org.castafiore.ui.ex.form;
 
+import org.castafiore.ui.engine.JQuery;
+
 /**
  * 
  * @author Kureem Rossaye<br>
@@ -44,6 +46,9 @@ public class EXTextArea extends AbstractStatefullComponent<String> {
 	public void setValue(String value) {
 		super.setAttribute("value", value);
 		setText(value);
+		JQuery jquery = getJQuery();
+		jquery.val(value);
+		addCommand(jquery);
 	}
 	
 	

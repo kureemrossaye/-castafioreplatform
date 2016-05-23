@@ -25,6 +25,7 @@ import org.castafiore.ui.Container;
  *          kureem@gmail.com
  * Oct 22, 2008
  */
+@SuppressWarnings("deprecation")
 public class ColumnLayout implements Layout {
 
 	public void doStyling(Container child,  Container container) {

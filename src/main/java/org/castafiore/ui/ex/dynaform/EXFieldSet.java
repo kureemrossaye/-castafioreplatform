@@ -13,6 +13,7 @@ import org.castafiore.ui.ex.form.button.Button;
 import org.castafiore.utils.ComponentUtil;
 import org.castafiore.utils.ComponentVisitor;
 
+@SuppressWarnings("rawtypes")
 public class EXFieldSet extends EXContainer implements StatefullComponent<Map<String,?>>{
 
 	private int columns = 1;
@@ -213,6 +214,7 @@ public class EXFieldSet extends EXContainer implements StatefullComponent<Map<St
 		return (StatefullComponent)getDescendentByName(name);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<StatefullComponent<?>> getFields(){
 		//Container tBody = getChild("tbody");
 		
@@ -247,6 +249,7 @@ public class EXFieldSet extends EXContainer implements StatefullComponent<Map<St
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setValue(Map<String,?> value) {
 		for(String key : value.keySet()){
 			Object val = value.get(key);

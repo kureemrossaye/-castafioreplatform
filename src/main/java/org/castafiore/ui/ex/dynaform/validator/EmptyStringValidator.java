@@ -34,14 +34,14 @@ public class EmptyStringValidator implements Validator {
 	public boolean validate(Container component) {
 		if(component instanceof StatefullComponent)
 		{
-			if(((StatefullComponent)component).getValue() == null )
+			if(((StatefullComponent<?>)component).getValue() == null )
 			{
 				component.setStyle("border", "dashed 1px red");
 				return false;
 				
 			}
 			
-			if(((StatefullComponent)component).getValue() != null && ((StatefullComponent)component).getValue().toString().length() == 0)
+			if(((StatefullComponent<?>)component).getValue() != null && ((StatefullComponent<?>)component).getValue().toString().length() == 0)
 			{
 				component.setStyle("border", "dashed 1px red");
 				return false;

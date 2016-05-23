@@ -41,6 +41,7 @@ import org.springframework.util.Assert;
  *          kureem@gmail.com
  * June 27 2008
  */
+@SuppressWarnings("deprecation")
 public class EXContainer extends EXDynamicHTMLTag implements Container {
 	
 	
@@ -82,6 +83,7 @@ public class EXContainer extends EXDynamicHTMLTag implements Container {
 		return resources;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T extends Application> T getRoot()
 	{
 		return (T)CastafioreApplicationContextHolder.getCurrentApplication();
@@ -168,6 +170,7 @@ public class EXContainer extends EXDynamicHTMLTag implements Container {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T extends Container> T getDescendentOfType(Class<T> type)
 	{
 		Assert.notNull(type, "cannot search a descendent with type null");

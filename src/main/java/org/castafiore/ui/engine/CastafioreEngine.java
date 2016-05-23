@@ -57,7 +57,6 @@ public final class CastafioreEngine {
 	
 	
 	
-	
 	public CastafioreEngine(InterceptorRegistry interceptorRegistry) {
 		super();
 		this.interceptorRegistry = interceptorRegistry;
@@ -78,7 +77,7 @@ public final class CastafioreEngine {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("deprecation")
 	public  synchronized String getJQuery(Container container, String parentId, Container root,  ListOrderedMap buffer)
 	{
 		
@@ -184,17 +183,15 @@ public final class CastafioreEngine {
 		/**
 		 * we append changed styles
 		 */
-		if((false)){
-			//
-			if(container.rendered()){
-				jQuery.eval("var _" + container.getId() + "= document.getElementById('"+container.getId()+"');");
-			}
-			jQuery.setSVGAttributes(getMap(container, 1), container.getId());
-		}else{
+	
 			
 			jQuery.setAttributes(getMap(container, 1));
 			
-		}
+			JQuery command = container.getCommand();
+			if(command != null){
+				jQuery.append(command);
+			}
+			
 		
 		
 		
@@ -273,7 +270,7 @@ public final class CastafioreEngine {
 	public  synchronized String executeServerAction(String componentId,  Application application, String parentId, Map<String, String> parameters)
 	{
 		
-		List<StatefullComponent> statefullcomponents =  new ArrayList<StatefullComponent>(5);
+		List<StatefullComponent<?>> statefullcomponents =  new ArrayList<StatefullComponent<?>>(5);
 		List<Container> cCo = new ArrayList<Container>(1);
 		ComponentUtil.compcount = 0;
 		//logger.debug("extracting components from dom");
@@ -283,7 +280,7 @@ public final class CastafioreEngine {
 		//logger.debug("updating stateful components with client values");
 		
 		int eventId = Integer.parseInt(parameters.get("casta_eventid"));
-		for(StatefullComponent component : statefullcomponents)
+		for(StatefullComponent<?> component : statefullcomponents)
 		{
 			boolean toUpdate = parameters.containsKey("casta_value_" + component.getId());
 			if(toUpdate)
@@ -363,7 +360,7 @@ public final class CastafioreEngine {
 				}catch(Throwable uie){
 					
 					uie.printStackTrace();
-					Application root = component.getRoot();
+				//	Application root = component.getRoot();
 					
 					updateClient = true;
 				//error = true;

@@ -14,11 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
- package org.castafiore.profile;
+ package org.castafiore.community.ui.users;
 
+import org.castafiore.ui.Container;
+import org.castafiore.ui.ex.form.table.DefaultTableColumnModel;
+import org.castafiore.ui.ex.form.table.EXTable;
+import org.castafiore.ui.ex.form.table.TableModel;
 
-public class Profiler {
-	
+public class UsersColumnModel extends DefaultTableColumnModel {
 
-	
+	public Container getColumnAt(int index, EXTable table, TableModel model) {
+
+		Container column = super.getColumnAt(index, table, model);
+		if (index > 3) {
+			column.setAttribute("width", "19");
+		}
+		return column;
+	}
 }

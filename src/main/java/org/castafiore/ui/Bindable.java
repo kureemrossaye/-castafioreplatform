@@ -16,6 +16,6 @@
  */
  package org.castafiore.ui;
 
-public interface Bindable extends StatefullComponent{
+public interface Bindable extends StatefullComponent<Object>{
 
 }

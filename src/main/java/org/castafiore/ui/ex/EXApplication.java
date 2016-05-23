@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.castafiore.ui.Application;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * 
@@ -37,7 +40,12 @@ import org.castafiore.ui.Application;
  * Implementation of Application.
  * Most simple implementation
  */
-public abstract  class EXApplication extends EXContainer implements Application {
+public abstract  class EXApplication extends EXContainer implements Application , ApplicationContextAware{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private Map<String, Object> configs = new LinkedHashMap<String, Object>(0);
 	
@@ -48,6 +56,8 @@ public abstract  class EXApplication extends EXContainer implements Application 
 	private Map<String, String> cookies = new LinkedHashMap<String, String>(0);
 	
 	private Map<String, String> newCookies = new LinkedHashMap<String, String>(0);
+	
+	private ApplicationContext contex;
 	
 	public EXApplication(String name) {
 		super(name, "div");
@@ -137,6 +147,14 @@ public abstract  class EXApplication extends EXContainer implements Application 
 		
 	public Map<String, String> getNewCookies(){
 		return newCookies;
+	}
+	
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException{
+		this.contex = applicationContext;
+	}
+	
+	public <T> T getBean(Class<T> type){
+		return contex.getBean(type);
 	}
 
 }

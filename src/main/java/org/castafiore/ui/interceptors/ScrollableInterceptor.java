@@ -7,7 +7,9 @@ import org.castafiore.ui.Scrollable;
 import org.castafiore.ui.UIException;
 import org.castafiore.ui.engine.JQuery;
 import org.castafiore.ui.events.Event;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ScrollableInterceptor implements Interceptor, Event{
 
 	@Override
@@ -60,6 +62,11 @@ public class ScrollableInterceptor implements Interceptor, Event{
 			throws UIException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Class<? extends Container> getSupportedInterface() {
+		return Scrollable.class;
 	}
 
 }

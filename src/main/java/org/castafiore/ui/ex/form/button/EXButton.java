@@ -83,8 +83,10 @@ public class EXButton extends EXContainer implements Button {
 	public void setEnabled(boolean enabled){
 		if(enabled){
 			removeClass("disabled");
+			setAttribute("disabled", (String)null);
 		}else{
 			addClass("disabled");
+			setAttribute("disabled", "disabled");
 		}
 	}
 	

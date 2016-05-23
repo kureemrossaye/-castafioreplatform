@@ -22,8 +22,9 @@ import java.util.Map;
 import org.castafiore.ui.Container;
 import org.castafiore.ui.StatefullComponent;
 import org.castafiore.ui.ex.form.button.Button;
-
+@SuppressWarnings("rawtypes")
 public interface DynaForm extends Container{
+	
 	
 	public Map<String, StatefullComponent> getFieldsMap();
 	

@@ -53,6 +53,10 @@ public class ResourceUtil {
 		}
 
 	}
+	
+	public static String getDirToWrite(){
+		return "";
+	}
 
 	public static String getDownloadURL(String type, String path) {
 		return "castafiore/resource?spec=" + type + ":" + path;

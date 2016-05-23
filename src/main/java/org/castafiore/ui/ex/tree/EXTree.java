@@ -130,9 +130,10 @@ public class EXTree extends EXContainer{
 	
 	//public void refreshNode()
 	
-	
+	@SuppressWarnings("rawtypes")
 	public class Node extends EXContainer
 	{
+		
 		public Node(String name, TreeNode node) {
 			super(name, "div");
 			setStyle("padding-left", "10px");
@@ -161,7 +162,7 @@ public class EXTree extends EXContainer{
 		}
 	}
 	
-	
+	@SuppressWarnings("rawtypes")
 	public class NodeContainer extends EXContainer{
 		
 		private TreeNode treeNode;
@@ -228,7 +229,7 @@ public class EXTree extends EXContainer{
 		}
 	}
 	
-	
+	@SuppressWarnings("rawtypes")
 	public static int getDepth(TreeNode treeNode)
 	{
 		int i = 0;

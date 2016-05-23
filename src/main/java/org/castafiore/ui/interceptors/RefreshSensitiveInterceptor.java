@@ -18,7 +18,9 @@
 
 import org.castafiore.ui.Container;
 import org.castafiore.ui.RefreshSentive;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RefreshSensitiveInterceptor implements Interceptor {
 
 	public Interceptor next() {
@@ -31,6 +33,11 @@ public class RefreshSensitiveInterceptor implements Interceptor {
 		}
 		
 		return true;
+	}
+
+	@Override
+	public Class<? extends Container> getSupportedInterface() {
+		return RefreshSentive.class;
 	}
 
 }

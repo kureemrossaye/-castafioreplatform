@@ -17,25 +17,23 @@
  package org.castafiore;
 public class InvalidApplicationConfigurationException extends RuntimeException {
 
+	
+	private static final long serialVersionUID = 1L;
 	public InvalidApplicationConfigurationException() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public InvalidApplicationConfigurationException(String message,
 			Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	public InvalidApplicationConfigurationException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 	public InvalidApplicationConfigurationException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 }

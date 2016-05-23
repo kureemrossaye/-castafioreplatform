@@ -1,7 +1,9 @@
 package org.castafiore.ui.ex.panel;
 
 import org.castafiore.ui.Container;
+import org.castafiore.ui.engine.JQuery;
 import org.castafiore.ui.ex.EXContainer;
+import org.castafiore.ui.ex.form.button.EXButton;
 
 public class EXModal extends EXContainer implements Panel{
 
@@ -23,13 +25,21 @@ public class EXModal extends EXContainer implements Panel{
 	
 	private Container modalFooter = new EXContainer("modalFooter", "div").addClass("modal-footer");
 	
+	private Container modalDialog = new EXContainer("modalDialog", "div").addClass("modal-dialog");
+	
+	public static String SIZE_SMALL="btn-sm";
+	public static String SIZE_LARGE="btn-lg";
+
+	public static String[] SIZES = new String[]{SIZE_SMALL,SIZE_LARGE};
+	
+	
 	public EXModal(String name, String title) {
 		super(name, "div");
 		addClass("modal").addClass("fade");
 		setAttribute("tabindex", "-1");
 		setAttribute("role", "dialog");
 		
-		Container modalDialog = new EXContainer("modalDialog", "div").addClass("modal-dialog");
+		
 		addChild(modalDialog);
 		
 		Container modalContent = new EXContainer("modalContent", "div").addClass("modal-content");
@@ -46,6 +56,16 @@ public class EXModal extends EXContainer implements Panel{
 		
 		modalContent.addChild(modalFooter);
 		
+	}
+	
+	public EXModal setSize(String size){
+		for(String s : SIZES){
+			modalDialog.removeClass(s);
+		}
+		
+		modalDialog.addClass(size);
+		
+		return this;
 	}
 
 	@Override
@@ -83,6 +103,29 @@ public class EXModal extends EXContainer implements Panel{
 	public Panel setShowCloseButton(boolean b) {
 		closeButton.setDisplay(b);
 		return this;
+	}
+	
+	public Container getDialog(){
+		return modalDialog;
+	}
+	
+	public Container getFooter(){
+		return modalFooter;
+	}
+	
+	public void decorateAsToggleButton(Container closeButton){
+		closeButton.setAttribute("data-toggle", "modal");
+		closeButton.setAttribute("data-target", "#" + getId());
+	}
+	
+	public void close(){
+		JQuery jquery = getJQuery();
+		addCommand(jquery.invoke("modal","hide"));
+	}
+	
+	public void open(){
+		JQuery jquery = getJQuery();
+		addCommand(jquery.invoke("modal", "show"));
 	}
 
 }
