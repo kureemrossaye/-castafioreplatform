@@ -3,7 +3,6 @@ package org.castafiore.ui.ex.panel;
 import org.castafiore.ui.Container;
 import org.castafiore.ui.engine.JQuery;
 import org.castafiore.ui.ex.EXContainer;
-import org.castafiore.ui.ex.form.button.EXButton;
 
 public class EXModal extends EXContainer implements Panel{
 
@@ -55,6 +54,7 @@ public class EXModal extends EXContainer implements Panel{
 		modalContent.addChild(modalBody);
 		
 		modalContent.addChild(modalFooter);
+		close();
 		
 	}
 	

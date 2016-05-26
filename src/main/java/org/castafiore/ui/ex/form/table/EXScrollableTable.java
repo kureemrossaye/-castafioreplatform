@@ -62,7 +62,6 @@ public class EXScrollableTable extends EXContainer implements Scrollable{
 
 	@Override
 	public boolean isScrollable() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 

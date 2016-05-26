@@ -174,7 +174,6 @@ public class EXEditableTable extends EXTable implements Event{
 		@Override
 		public void Success(JQuery container, Map<String, String> request)
 				throws UIException {
-			// TODO Auto-generated method stub
 			
 		}
 		
@@ -239,7 +238,6 @@ public class EXEditableTable extends EXTable implements Event{
 	@Override
 	public void Success(JQuery container, Map<String, String> request)
 			throws UIException {
-		// TODO Auto-generated method stub
 		
 	}
 	

@@ -19,7 +19,6 @@
 import org.castafiore.community.ui.CommunityEvents;
 import org.castafiore.security.SecurityService;
 import org.castafiore.security.model.User;
-import org.castafiore.ui.Dimension;
 import org.castafiore.ui.events.Event;
 import org.castafiore.ui.ex.dynaform.EXDynaformPanel;
 import org.castafiore.ui.ex.form.EXInput;
@@ -52,13 +51,13 @@ public class EXAccountSettingForm extends EXDynaformPanel{
 		saveButton.addEvent(CommunityEvents.GENERIC_FORM_METHOD_EVENT, Event.CLICK);
 		addButton(saveButton);
 		addButton(new EXButton("Cancel", "Cancel"));
-		setShowCloseButton(false);
-		setShowHeader(false);
+		//setShowCloseButton(false);
+		//setShowHeader(false);
 		
 		//ComponentUtil.applyStyleOnAll(this, EXInput.class, "width", "270px");
 		
-		setDraggable(false);
-		setWidth(Dimension.parse("100%"));
+		//setDraggable(false);
+		//setWidth(Dimension.parse("100%"));
 		setUser(user);
 		
 	}

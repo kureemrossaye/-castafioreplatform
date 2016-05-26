@@ -22,7 +22,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.map.ListOrderedMap;
 import org.castafiore.ui.Container;
 import org.castafiore.ui.engine.JQuery;
 import org.castafiore.ui.html.HTMLTag;

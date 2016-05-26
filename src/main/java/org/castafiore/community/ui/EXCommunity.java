@@ -16,6 +16,7 @@
  */
  package org.castafiore.community.ui;
 
+import org.castafiore.portal.EXPortal;
 import org.castafiore.security.SecurityService;
 import org.castafiore.ui.Container;
 import org.castafiore.ui.Dimension;
@@ -28,13 +29,20 @@ public class EXCommunity extends EXContainer implements PopupContainer {
 
 	
 	
+	private EXPortal portal = new EXPortal("portal");
+	
 	
 	public EXCommunity(SecurityService service) {
 		super("EXCommunity", "div");
+		
+		addChild(portal);
+		addChild(new EXContainer("clear", "div").addClass("clearfix"));
+		
 		EXTabPanel tabs = new EXTabPanel("mainTab",new CommunityTabModel(service));
 		tabs.setWidth(Dimension.parse("100%"));
-		addChild(tabs);
-		addChild(new EXOverlayPopupPlaceHolder("overlay"));
+		portal.setBody("User management", "Portlet to manage organization", tabs);
+		//addChild(tabs);
+		//addChild(new EXOverlayPopupPlaceHolder("overlay"));
 		
 	}
 

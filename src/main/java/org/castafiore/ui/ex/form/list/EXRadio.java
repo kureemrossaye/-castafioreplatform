@@ -25,46 +25,36 @@ import org.castafiore.ui.engine.JQuery;
 import org.castafiore.ui.events.Event;
 import org.castafiore.ui.ex.EXContainer;
 import org.castafiore.ui.ex.form.EXRadioButton;
-import org.castafiore.ui.ex.layout.Layout;
 
 /**
  * 
  * 
  * @author Kureem Rossaye<br>
- *          kureem@gmail.com
- * Oct 22, 2008
+ *         kureem@gmail.com Oct 22, 2008
  */
-@SuppressWarnings({ "deprecation" })
-public class EXRadio<T> extends AbstractEXList<T>  {
-	
-	private final static Event SETVALUE_EVENT = new Event(){
+public class EXRadio<T> extends AbstractEXList<T> {
+
+	private final static Event SETVALUE_EVENT = new Event() {
 
 		public void ClientAction(JQuery application) {
 			String attrRef = application.getAttribute("value").getJavascript();
-			
+
 			application.getParent().getParent().setAttribute("value", attrRef);
-			
+
 		}
 
-		
+		public boolean ServerAction(Container component, Map<String, String> requestParameters) throws UIException {
 
-		public boolean ServerAction(Container component,
-				Map<String, String> requestParameters) throws UIException {
-			
 			return false;
 		}
 
-
-
 		public void Success(JQuery component, Map<String, String> requestParameters) throws UIException {
-			
+
 		}
-		
+
 	};
-	
-	private   ListItemRenderer<T> RADIO_CELLRENDERER = new ListItemRenderer<T>(){
 
-
+	private ListItemRenderer<T> RADIO_CELLRENDERER = new ListItemRenderer<T>() {
 
 		@Override
 		public ListItem<T> getCellAt(int index, T value, DataModel<T> model) {
@@ -74,89 +64,55 @@ public class EXRadio<T> extends AbstractEXList<T>  {
 			label.setText(value.toString());
 			div.addChild(label);
 			EXRadioButton radio = new EXRadioButton("radiobutton_");
-			radio.setValue(index + "");	
+			radio.setValue(index + "");
 			radio.addEvent(SETVALUE_EVENT, Event.CLICK);
-			
+
 			div.addChild(radio);
 			div.setData(value);
-			
+
 			return div;
 		}
-		
-	};
-	
 
+	};
 
 	public EXRadio(String name, DataModel<T> model) {
 		super(name, "div", model);
-		
+
 		super.setRenderer(RADIO_CELLRENDERER);
 	}
 
-	
 	public EXRadio(String name, DataModel<T> model, Object value) {
 		super(name, "div", model);
-		
+
 		super.setRenderer(RADIO_CELLRENDERER);
 		setValue(value);
 	}
 
-
 	@Override
-	public void selectItem(ListItem<T> child, boolean selected)
-	{
-		if(selected)
+	public void selectItem(ListItem<T> child, boolean selected) {
+		if (selected)
 			child.getChildByIndex(1).setAttribute("checked", "checked");
 		else
-			child.getChildByIndex(1).setAttribute("checked", (String)null);
-		
+			child.getChildByIndex(1).setAttribute("checked", (String) null);
+
 	}
-
-
-
-	public void setVertical(){
-		super.setLayout(null);
-		
-	}
-	
-	public void setHorizontal(){
-		super.setLayout(new Layout(){
-
-			public void doStyling(Container child, Container container) {
-				child.setStyle("float", "left");
-				
-			}
-			
-		});
-	}
-
 
 	@Override
 	public void addItem(ListItem<T> item) {
 		addChild(item);
-		
-	}
 
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public ListItem<T> getItem(int index) {
-		return (ListItem<T>)getChildByIndex(index);
+		return (ListItem<T>) getChildByIndex(index);
 	}
-
-
-	
-
 
 	@Override
 	public void setEnabled(boolean enabled) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-
-
-	
-
 
 }

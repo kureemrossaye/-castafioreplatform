@@ -14,49 +14,65 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
- package org.castafiore.ui.ex.panel;
+package org.castafiore.ui.ex.panel;
 
 import java.util.List;
 
 import org.castafiore.ui.Container;
 import org.castafiore.ui.ex.EXContainer;
+import org.castafiore.ui.ex.form.button.EXButton;
 import org.castafiore.ui.js.JMap;
 
-public class EXPanel extends EXContainer implements Panel{
-	
-	
+public class EXPanel extends EXContainer implements Panel {
+
 	private Container bodyContainer = new EXContainer("bodyContainer", "div").addClass("panel-body");
-	
+
 	private Container widgetHead = new EXContainer("widget-head", "div").addClass("panel-heading");
-	
-	
+
 	private Container widgetFoot = new EXContainer("widgetFoot", "div").addClass("panel-footer");
+
+	public static String TYPE_DEFAULT = "panel-default";
+	public static String TYPE_PRIMARY = "panel-primary";
+	public static String TYPE_SUCCESS = "panel-success";
+	public static String TYPE_INFO = "panel-info";
+	public static String TYPE_WARNING = "panel-warning";
+	public static String TYPE_DANGER = "btn-danger";
+
+	public static String[] TYPES = new String[] { TYPE_DEFAULT, TYPE_PRIMARY, TYPE_SUCCESS, TYPE_INFO, TYPE_WARNING,
+			TYPE_DANGER };
 
 	public EXPanel(String name, String title) {
 		super(name, "div");
 		addClass("panel panel-default");
 		addChild(widgetHead);
 		widgetHead.setText(title);
-		 
-		
+
 		addChild(bodyContainer);
-		
+
 		addChild(widgetFoot);
-		
+		setType(TYPE_DEFAULT);
+
 	}
-	
-	
-	
-	
-	public EXPanel(String name){
+
+	public EXPanel(String name) {
 		this(name, "");
+	}
+
+	public EXPanel setType(String type) {
+		for (String s : TYPES) {
+			removeClass(s);
+		}
+
+		addClass(type);
+
+		return this;
 	}
 
 	public Container getBody() {
 		List<Container> childBody = getBodyContainer().getChildren();
-		if(childBody.size() > 0){
+		if (childBody.size() > 0) {
 			return childBody.get(0);
-		}else{
+		} else {
 			return null;
 		}
 	}
@@ -64,65 +80,57 @@ public class EXPanel extends EXContainer implements Panel{
 	public Panel setBody(Container container) {
 		getBodyContainer().getChildren().clear();
 		getBodyContainer().setRendered(false);
-		getBodyContainer().addChild(container);		
+		getBodyContainer().addChild(container);
 		return this;
 	}
 
-	
 	public Panel setShowHeader(boolean showHeader) {
 		widgetHead.setDisplay(showHeader);
 		return this;
-		
+
 	}
 
 	public Panel setTitle(String title) {
 		widgetHead.setText(title);
-			return this;
-		
-		
+		return this;
+
 	}
 
-	public void addPopup(Container popup){
+	public void addPopup(Container popup) {
 		addChild(popup);
 	}
-	
-	public Panel setShowFooter(boolean display){
+
+	public Panel setShowFooter(boolean display) {
 		widgetFoot.setDisplay(display);
 		return this;
 	}
-	
-	public Container getFooterContainer(){
+
+	public Container getFooterContainer() {
 		return widgetFoot;
 	}
-	protected Container getBodyContainer(){
+
+	protected Container getBodyContainer() {
 		return bodyContainer;
 	}
-	
-	public Container setDraggable(boolean draggable)
-	{
-		if(draggable)
-		{
-			JMap options = new JMap().put("opacity", 0.35).put("handle", "#" +widgetHead.getId());
+
+	public Container setDraggable(boolean draggable) {
+		if (draggable) {
+			JMap options = new JMap().put("opacity", 0.35).put("handle", "#" + widgetHead.getId());
 			options.put("containment", "document");
 			setDraggable(true, options);
 			setStyle("position", "absolute");
 			setStyle("top", "10%");
 			setStyle("left", "10%");
-		}
-		else
-		{
+		} else {
 			super.setDraggable(false);
 			setStyle("position", "static");
 		}
 		return this;
 	}
 
-
-
-
 	@Override
 	public Panel setShowCloseButton(boolean b) {
 		return this;
 	}
-	
+
 }

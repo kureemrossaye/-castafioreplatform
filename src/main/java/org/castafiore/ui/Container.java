@@ -21,50 +21,46 @@ import java.util.List;
 import java.util.Set;
 
 import org.castafiore.ui.engine.JQuery;
-import org.castafiore.ui.ex.layout.Layout;
 import org.castafiore.ui.html.DynamicHTMLTag;
 import org.castafiore.ui.js.JMap;
 
 /**
  * 
  * 
- * @author : Kureem Rossaye
- *          kureem@gmail.com
- * Oct 22, 2008
+ * @author : Kureem Rossaye kureem@gmail.com Oct 22, 2008
  * @param <T>
  */
 
-@SuppressWarnings("deprecation")
 public interface Container extends DynamicHTMLTag {
-	
-	
-	public void onReady(JQuery proxy);
-	
 
-	 /**
-	  * appends a styleclass to the container
-	  * @param styleClass
-	  */
+	public void onReady(JQuery proxy);
+
+	/**
+	 * appends a styleclass to the container
+	 * 
+	 * @param styleClass
+	 */
 	public Container addClass(String styleClass);
-	
-	
+
 	/**
 	 * removes the specified class from the tag
+	 * 
 	 * @param sclass
 	 */
 	public Container removeClass(String sclass);
-	
+
 	/**
 	 * returns the style class set on the component
+	 * 
 	 * @return
 	 */
 	public String getStyleClass();
-	
+
 	/**
 	 * sets the style class on the component
 	 */
 	public Container setStyleClass(String styleClass);
-	
+
 	/**
 	 * removes a child
 	 * 
@@ -101,7 +97,7 @@ public interface Container extends DynamicHTMLTag {
 	 * @param component
 	 */
 	public Container addChild(Container component);
-	
+
 	public Container addChildAt(Container component, int position);
 
 	/**
@@ -133,8 +129,7 @@ public interface Container extends DynamicHTMLTag {
 	public Container setName(String name);
 
 	/**
-	 * remove the component
-	 * upon removal of a component, 
+	 * remove the component upon removal of a component,
 	 */
 	public void remove();
 
@@ -144,23 +139,20 @@ public interface Container extends DynamicHTMLTag {
 	 * @param classType
 	 * @return
 	 */
-	
+
 	public <T extends Container> T getAncestorOfType(Class<T> type);
-	
-	
-	
-	
-	
+
 	/**
 	 * returns the anscestor with the specified id
+	 * 
 	 * @param id
 	 * @return
 	 */
 	public Container getAncestorById(String id);
-	
-	
+
 	/**
 	 * returns the ancestor with the specified name
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -172,18 +164,19 @@ public interface Container extends DynamicHTMLTag {
 	 * @return
 	 */
 	public Container getParent();
-	
+
 	public Container setDraggable(boolean draggable);
-	
+
 	public Container setDraggable(boolean draggable, JMap options);
-	
+
 	public Container setResizable(boolean res);
-	
+
 	public Container setResizable(boolean res, JMap options);
 
 	/**
 	 * 
-	 * @return returns the root of the application. The root is always an instance of application
+	 * @return returns the root of the application. The root is always an
+	 *         instance of application
 	 */
 	public <T extends Application> T getRoot();
 
@@ -223,91 +216,79 @@ public interface Container extends DynamicHTMLTag {
 	public void setParent(Container container);
 
 	/**
-	 * applies a layout that will be used for all the children
-	 * 
-	 * @param layout
-	 */
-	public Container setLayout(Layout layout);
-
-	/**
-	 * returns the layout applied on the container
-	 * 
-	 * @return
-	 */
-	public Layout getLayout();
-	
-	
-	/**
 	 * finds the first descendent with name
+	 * 
 	 * @param name
 	 * @return
 	 */
 	public Container getDescendentByName(String name);
-	
+
 	/**
 	 * finds the first descendent that matches the specified id
+	 * 
 	 * @param id
 	 * @return
 	 */
 	public Container getDescendentById(String id);
-	
+
 	/**
 	 * find the first descendent with the specified type
+	 * 
 	 * @param type
 	 * @return
 	 */
 
 	public <T extends Container> T getDescendentOfType(Class<T> type);
-	
+
 	/**
 	 * sets the component visible or invisible
+	 * 
 	 * @param display
 	 */
 	public Container setDisplay(boolean display);
-	
+
 	/**
 	 * returns if the container is visible or not
+	 * 
 	 * @return
 	 */
 	public boolean isVisible();
-	
-	
-	
-	
-	
+
 	/**
-	 * use this method to lazily load a script only when this component is available<br/>
-	 * Note that you can add as many script in any component. Each script will be loaded only once
+	 * use this method to lazily load a script only when this component is
+	 * available<br/>
+	 * Note that you can add as many script in any component. Each script will
+	 * be loaded only once
+	 * 
 	 * @param script
 	 */
 	public Container addScript(String scripturl);
-	
-	
+
 	/**
 	 * adds a stylesheet to the application.<br/>
-	 * Note that you can add as many stylesheet as you wish. Each stylesheet will be loaded only once in the container
+	 * Note that you can add as many stylesheet as you wish. Each stylesheet
+	 * will be loaded only once in the container
+	 * 
 	 * @param stylesheeturl
 	 */
 	public Container addStyleSheet(String stylesheeturl);
-	
-	
+
 	public Set<String> getResources();
-	
-	
+
 	public Container setWidth(Dimension dimension);
-	
+
 	public Container setHeight(Dimension dimension);
-	
+
 	public Dimension getWidth();
-	
+
 	public Dimension getHeight();
-	
-	public boolean hasEvent(Class<?> event,int type);
-	
+
+	public boolean hasEvent(Class<?> event, int type);
+
 	public void removeEvent(Class<?> event, int type);
-	
+
 	public void refresh();
-	
+
 	public void setReadOnlyAttribute(String key, String value);
 
 }
