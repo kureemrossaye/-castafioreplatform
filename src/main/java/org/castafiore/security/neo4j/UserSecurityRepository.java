@@ -3,14 +3,14 @@ package org.castafiore.security.neo4j;
 import java.util.List;
 
 import org.castafiore.security.model.UserSecurity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.neo4j.repository.GraphRepository;
 
-public interface UserSecurityRepository extends CrudRepository<UserSecurity, Integer> {
+public interface UserSecurityRepository extends GraphRepository<UserSecurity> {
 	
 	public List<UserSecurity> findByUser_Username(String username);
 	
 	
-	public Long countByUser_UsernameAndRole_NameAndGrp_Name(String username, String role, String group);
+	public List<UserSecurity> countByUser_UsernameAndRole_NameAndGrp_Name(String username, String role, String group);
 	
 	public List<UserSecurity> findByUser_UsernameAndRole_NameAndGrp_Name(String username, String role, String group);
 	

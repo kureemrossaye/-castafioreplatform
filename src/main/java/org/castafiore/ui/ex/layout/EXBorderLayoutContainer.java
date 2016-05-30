@@ -14,50 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
- package org.castafiore.ui.ex.layout;
+package org.castafiore.ui.ex.layout;
 
-import org.castafiore.ui.Container;
 import org.castafiore.ui.LayoutContainer;
-import org.castafiore.ui.PopupContainer;
 
-public class EXBorderLayoutContainer extends EXMigLayout implements LayoutContainer , PopupContainer {
-	
+public class EXBorderLayoutContainer extends EXMigLayout implements LayoutContainer {
+
 	public final static String TOP = "0:0";
-	
-	public final static String LEFT = "0:1";
-	
-	public final static String CENTER  = "1:1";
-	
-	public final static String RIGHT = "2:1";
-	
-	public final static String BOTTOM  = "0:2";
-	
 
-	
-	
+	public final static String LEFT = "0:1";
+
+	public final static String CENTER = "1:1";
+
+	public final static String RIGHT = "2:1";
+
+	public final static String BOTTOM = "0:2";
+
 	public EXBorderLayoutContainer() {
 		this("Border Layout");
-		
-		
+
 	}
 
 	public EXBorderLayoutContainer(String name) {
-		
+
 		super(name, "12;3:6:3;12");
 
 	}
 
-	@Override
-	public void addPopup(Container popup) {
-		addChild(popup);
-		
-	}
-	
-
-
-	
-	
-	
-	
-	
 }

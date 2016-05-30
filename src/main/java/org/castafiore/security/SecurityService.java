@@ -22,6 +22,7 @@ import java.util.List;
 import org.castafiore.security.model.Group;
 import org.castafiore.security.model.Role;
 import org.castafiore.security.model.User;
+import org.castafiore.security.model.UserSecurity;
 
 /**
  * 
@@ -188,7 +189,7 @@ public interface SecurityService {
 	 * @throws Exception
 	 */
 
-	public String[] getPermissionSpec(String username) throws Exception;
+	public List<UserSecurity> getPermissionSpec(String username) throws Exception;
 
 	/**
 	 * Register a user into the system

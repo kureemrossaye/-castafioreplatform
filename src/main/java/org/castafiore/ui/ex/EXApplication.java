@@ -57,7 +57,7 @@ public abstract  class EXApplication extends EXContainer implements Application 
 	
 	private Map<String, String> newCookies = new LinkedHashMap<String, String>(0);
 	
-	private ApplicationContext contex;
+	private ApplicationContext context;
 	
 	public EXApplication(String name) {
 		super(name, "div");
@@ -150,11 +150,15 @@ public abstract  class EXApplication extends EXContainer implements Application 
 	}
 	
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException{
-		this.contex = applicationContext;
+		this.context = applicationContext;
 	}
 	
-	public <T> T getBean(Class<T> type){
-		return contex.getBean(type);
+	public <T> T getService(Class<T> type){
+		return context.getBean(type);
+	}
+	
+	public <T> T getService(String name, Class<T> type){
+		return context.getBean(name, type);
 	}
 
 }

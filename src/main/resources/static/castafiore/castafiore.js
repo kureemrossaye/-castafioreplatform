@@ -71,10 +71,10 @@ function getParameterByName(name, url) {
 
 (function($) {
 
-	$.fn.select = function(url) {
+	$.fn.select = function(options) {
 
 		var me = $(this);
-		$.get(url, function() {
+		$.get(options['url'], function() {
 			
 			
 			//alert("success");

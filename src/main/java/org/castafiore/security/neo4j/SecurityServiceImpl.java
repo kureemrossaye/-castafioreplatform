@@ -97,10 +97,15 @@ public class SecurityServiceImpl implements SecurityService {
 	}
 
 	public boolean isUserAllowed(String username, String role, String group) {
-		long count = userSecurityRepository.countByUser_UsernameAndRole_NameAndGrp_Name(username, role, group);
+		try{
+		int count = userSecurityRepository.countByUser_UsernameAndRole_NameAndGrp_Name(username, role, group).size();
 		if (count > 0) {
 			return true;
 		} else {
+			return false;
+		}
+		}catch(Exception e){
+			e.printStackTrace();
 			return false;
 		}
 
@@ -292,8 +297,8 @@ public class SecurityServiceImpl implements SecurityService {
 		return true;
 	}
 
-	public String[] getPermissionSpec(String username) throws Exception {
-		return new String[] { "*" };
+	public List<UserSecurity> getPermissionSpec(String username) throws Exception {
+		return userSecurityRepository.findByUser_Username(username);
 
 	}
 

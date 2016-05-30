@@ -3,9 +3,9 @@ package org.castafiore.wfs.service;
 import org.castafiore.wfs.types.File;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.neo4j.repository.GraphRepository;
 
-public interface FileRepository extends CrudRepository<File, Long>{
+public interface FileRepository extends GraphRepository<File>{
 	
 	
 

@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableNeo4jRepositories
 class Neo4jConfig extends Neo4jConfiguration {
 
-    public static final String URL = System.getenv("NEO4J_URL") != null ? System.getenv("NEO4J_URL") : "http://neo4j:a28n12l10@localhost:7474";
+    public static final String URL = System.getenv("NEO4J_URL") != null ? System.getenv("NEO4J_URL") : "http://neo4j:a28n12l10@127.0.0.1:7474";
 
     @Bean
     public org.neo4j.ogm.config.Configuration getConfiguration() {
@@ -35,7 +35,7 @@ class Neo4jConfig extends Neo4jConfiguration {
 
     @Override
     public SessionFactory getSessionFactory() {
-        return new SessionFactory(getConfiguration(),"org.castafiore.security.model", "org.castafiore.wfs.types");
+        return new SessionFactory(getConfiguration(),"org.castafiore.security.model", "org.castafiore.wfs.types", "org.castafiore.portal.model");
     }
 
 

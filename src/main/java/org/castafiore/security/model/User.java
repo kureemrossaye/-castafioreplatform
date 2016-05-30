@@ -18,11 +18,9 @@
 package org.castafiore.security.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.castafiore.utils.StringUtil;
@@ -86,7 +84,8 @@ public class User implements Serializable {
 
 	private String pointOfSale;
 	
-	private List<UserSecurity> securities = new ArrayList<UserSecurity>();
+	private Set<Address> address = new HashSet<Address>();
+	
 
 	public String getPointOfSale() {
 		return pointOfSale;
@@ -132,7 +131,7 @@ public class User implements Serializable {
 		return merchant;
 	}
 
-	private Set<Address> address = new HashSet<Address>();
+	
 
 	public Boolean isMerchant() {
 		return merchant;
@@ -322,13 +321,6 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public List<UserSecurity> getSecurities() {
-		return securities;
-	}
-
-	public void setSecurities(List<UserSecurity> securities) {
-		this.securities = securities;
-	}
 	
 	
 

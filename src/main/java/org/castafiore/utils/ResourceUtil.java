@@ -54,6 +54,11 @@ public class ResourceUtil {
 
 	}
 	
+	
+	public static String getResourceUrl(String type, String value){
+		return "castafiore/resource/" + type + "/" + value;
+	}
+	
 	public static String getDirToWrite(){
 		return "";
 	}

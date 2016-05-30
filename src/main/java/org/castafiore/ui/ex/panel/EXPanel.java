@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.castafiore.ui.Container;
 import org.castafiore.ui.ex.EXContainer;
-import org.castafiore.ui.ex.form.button.EXButton;
 import org.castafiore.ui.js.JMap;
 
 public class EXPanel extends EXContainer implements Panel {

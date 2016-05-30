@@ -77,5 +77,9 @@ public class UserSecurity implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	public String toString(){
+		return role.getName() + ":" + grp.getName();
+	}
 
 }

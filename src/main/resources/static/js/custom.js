@@ -13,7 +13,7 @@ jQuery(document).ready(function(){
 		mainwrapperHeight();
 		responsive();
 		initMenuButton();
-		initInnerContent();
+	//	initInnerContent();
 	}, 2000);
 	
 	

@@ -48,7 +48,7 @@ public class EXProgressBar extends EXContainer{
 	}
 
 	public EXProgressBar setValue(Integer value){
-		double percent =(max - min)/(value - min);
+		double percent =((max - min)/(value - min))*100;
 		this.value = value;
 		
 		bar.setStyle("width", percent + "%");
