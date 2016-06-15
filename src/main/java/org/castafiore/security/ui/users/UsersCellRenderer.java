@@ -14,75 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
- package org.castafiore.security.ui.users;
+package org.castafiore.security.ui.users;
 
-import org.castafiore.security.ui.CommunityEvents;
 import org.castafiore.ui.Container;
-import org.castafiore.ui.events.Event;
 import org.castafiore.ui.ex.EXContainer;
 import org.castafiore.ui.ex.form.table.DefaultCellRenderer;
 import org.castafiore.ui.ex.form.table.EXTable;
 import org.castafiore.ui.ex.form.table.TableModel;
-import org.castafiore.utils.ComponentUtil;
-
-
 
 public class UsersCellRenderer extends DefaultCellRenderer {
-	
-	public Container getComponentAt(int row, int column,int page, TableModel model,
-			EXTable table) {
+
+	public Container getComponentAt(int row, int column, int page, TableModel model, EXTable table) {
 		Object value = model.getValueAt(column, row, page);
-		//table.addStyleSheet(ResourceUtil.getDownloadURL("classpath", "org/castafiore/resource/table/table.css"));
-		if(column <= 3){
-			EXContainer span = new EXContainer("", "span");
-			if(value == null)
-			{
-				span.setText(" ");
-			}
-			else
-			{
-				span.setText(value.toString());
-			}
-			return span;
-		}else{
-			EXContainer span = new EXContainer("", "span");
-			Container c = ComponentUtil.getContainer("", "div", null, "ui-state-default ui-corner-all UITableIcon");
-			span.addClass("ui-icon").setStyle("margin-top", "0px");
-			span.setAttribute("username", value.toString());
-			if(column == 4){
-				span.addClass("ui-icon-pencil");
-				//span.addEvent(CommunityEvents.SHOW_USER_FORM_EVENT, Event.CLICK);
-			}else{
-				span.addClass("ui-icon-circle-close");
-				c.addEvent(CommunityEvents.DELETE_USER_EVENT, Event.CLICK);
-			}
-			c.addChild(span);
-			c.setAttribute("username", value.toString());
-			return c;
+		EXContainer span = new EXContainer("", "span");
+		if (value == null) {
+			span.setText(" ");
+		} else {
+			span.setText(value.toString());
 		}
-		//return new EXEditableLabel(row + "-" + column,value.toString());
+		return span;
 	}
 
-	public void onChangePage(Container component,  int row,	int column,int page, TableModel model, EXTable table) {
+	public void onChangePage(Container component, int row, int column, int page, TableModel model, EXTable table) {
 		Object newValue = model.getValueAt(column, row, page);
-		EXContainer span = (EXContainer)component;
-		if(column <= 3){
-			if(newValue == null)
-			{
-				span.setText(" ");
-			}
-			else
-			{
-				span.setText(newValue.toString());
-			}
-			span.setRendered(false);
-		}else{
-			for(Container c : span.getChildren()){
-				c.setAttribute("username", newValue.toString());
-			}
-			span.setAttribute("username", newValue.toString());
+		EXContainer span = (EXContainer) component;
+		if (newValue == null) {
+			span.setText(" ");
+		} else {
+			span.setText(newValue.toString());
 		}
-		
+		span.setRendered(false);
+
 	}
 
 }

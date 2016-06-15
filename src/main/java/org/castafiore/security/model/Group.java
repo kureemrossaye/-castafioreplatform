@@ -19,6 +19,8 @@ package org.castafiore.security.model;
 
 import java.io.Serializable;
 
+import org.castafiore.portal.annotations.Column;
+import org.castafiore.portal.annotations.Table;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 
@@ -29,6 +31,7 @@ import org.neo4j.ogm.annotation.NodeEntity;
  *         kureem@gmail.com Oct 22, 2008
  */
 @NodeEntity
+@Table
 public class Group implements Serializable {
 
 	/**
@@ -39,8 +42,10 @@ public class Group implements Serializable {
 	@GraphId
 	private Long id;
 
+	@Column(position=0)
 	private String name;
 
+	@Column(position=1)
 	private String description;
 
 	public String getDescription() {

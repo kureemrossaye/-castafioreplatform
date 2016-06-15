@@ -24,6 +24,7 @@ import org.castafiore.ui.UIException;
 import org.castafiore.ui.tabbedpane.TabModel;
 import org.castafiore.ui.tabbedpane.TabPanel;
 import org.castafiore.utils.ComponentUtil;
+import org.springframework.context.MessageSource;
 
 public class CommunityTabModel implements TabModel {
 
@@ -31,12 +32,13 @@ public class CommunityTabModel implements TabModel {
 	
 	private SecurityService service;
 	
+	private MessageSource messageSource = null;
 	
 	
-	
-	public CommunityTabModel(SecurityService service) {
+	public CommunityTabModel(SecurityService service, MessageSource messageSource) {
 		super();
 		this.service = service;
+		this.messageSource = messageSource;
 	}
 
 	public int getSelectedTab() {
@@ -47,11 +49,11 @@ public class CommunityTabModel implements TabModel {
 	public Container getTabContentAt(TabPanel pane, int index) {
 		try{
 			if(index == 0){
-				return new EXUsersTab("usersList",service);
+				return new EXUsersTab("usersList",service, messageSource);
 			}else if(index == 1){
-				return new EXGroupsTab("groups",service);
+				return new EXGroupsTab("groups",service, messageSource);
 			}else if(index == 2){
-				return new EXMemberShipsTab("memberships", service);
+				return new EXMemberShipsTab("memberships", service,messageSource);
 			}
 			return ComponentUtil.getContainer("", "h1", "Under construction", null);
 		}catch(Exception e){

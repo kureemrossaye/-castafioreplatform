@@ -24,6 +24,8 @@ import org.castafiore.wfs.LockedFileException;
 import org.castafiore.wfs.session.SessionImpl;
 import org.castafiore.wfs.types.File;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,9 +69,9 @@ public class RepositoryServiceImpl  implements RepositoryService {
 	
 	
 
-	public boolean itemExists(String path)throws InsufficientPriviledgeException{
+	public boolean itemExists(String name)throws InsufficientPriviledgeException{
 		
-		Long count = fileRepository.countByAbsolutePath(path);
+		Long count = fileRepository.countByName(name);
 		if(count != null && count > 0){
 			return true;
 		}else{
@@ -77,14 +79,18 @@ public class RepositoryServiceImpl  implements RepositoryService {
 		}
 	}
 
-	public File getFile(String path, String username)throws InsufficientPriviledgeException, FileNotFoundException {
+	public File getFile(String name, String username)throws InsufficientPriviledgeException, FileNotFoundException {
 		tusername.set(username);
-		File result = fileRepository.findFirstByAbsolutePath(path);
+		File result = fileRepository.findFirstByName(name);
 		if(result == null){
-			throw new FileNotFoundException("the file " + path + " could not be found");
+			throw new FileNotFoundException("the file " + name + " could not be found");
 		}else{
 			return result;
 		}
+	}
+	
+	public Page<File> getFiles(String username, Pageable params){
+		return fileRepository.findAll(params);
 	}
 	
 
@@ -111,7 +117,7 @@ public class RepositoryServiceImpl  implements RepositoryService {
 			throw new IllegalArgumentException("you cannot add a file without setting its name first");
 		}
 		
-		if(file.getAbsolutePath() == null || file.getAbsolutePath().length() == 0){
+		if(file.getName() == null || file.getName().length() == 0){
 			throw new IllegalArgumentException("the file " + file.getName() + " cannot be updated since it was not save previously. Please use the saveIn method to save it in a directory first");
 		}
 		

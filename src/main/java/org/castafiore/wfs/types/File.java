@@ -8,14 +8,13 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.castafiore.utils.ChannelUtil;
 import org.castafiore.utils.ResourceUtil;
-import org.castafiore.wfs.Util;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
-import org.springframework.util.Assert;
 
 @NodeEntity
 public class File {
@@ -23,9 +22,7 @@ public class File {
 	@GraphId
 	private Long id;
 
-	private String absolutePath;
-
-	private File parent;
+	private String drive;
 
 	private String name;
 
@@ -49,8 +46,6 @@ public class File {
 
 	private Boolean locked = false;
 
-	protected List<File> children = null;
-
 	// La phrase produit ou slogan
 	private String summary;
 
@@ -69,10 +64,12 @@ public class File {
 	private String destination;
 
 	private String mimeType;
-	
+
 	private Boolean deleted = false;
-	
+
 	private String type;
+
+	private List<Metadata> metadata = new LinkedList<Metadata>();
 
 	public File() {
 
@@ -210,96 +207,12 @@ public class File {
 		return name;
 	}
 
-	public File getParent() {
-		return parent;
-	}
-
-	public void setParent(File parent) {
-		this.parent = parent;
-	}
-
 	public String getClazz() {
 		return clazz;
 	}
 
 	public Date getDateCreated() {
 		return dateCreated;
-	}
-
-	public String getAbsolutePath() {
-		return absolutePath;
-	}
-
-	protected void setAbsolutePath(String absolutePath) {
-		this.absolutePath = absolutePath;
-	}
-
-	@Override
-	public String toString() {
-		return getAbsolutePath();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o == null) {
-			return false;
-		}
-
-		if (!(o instanceof File)) {
-			return false;
-		}
-		try {
-			File f = (File) o;
-			if (f.getAbsolutePath() == null && getAbsolutePath() == null) {
-				return f.getName().equals(getName());
-			} else if (f.getAbsolutePath() == null && getAbsolutePath() != null) {
-				return f.getName().equals(getName());
-			} else if (f.getAbsolutePath() != null && getAbsolutePath() != null) {
-				return f.getAbsolutePath().equals(getAbsolutePath());
-			} else if (f.getAbsolutePath() != null && getAbsolutePath() == null) {
-				return false;
-			} else {
-				return false;
-			}
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	protected void addChild(File file) {
-
-		Assert.notNull(file, "Cannot add a null file");
-		addChild(file.getName(), file);
-	}
-
-	private void addChild(String name, File file) {
-		Assert.notNull(name, "name cannot be null");
-		Assert.notNull(file, "Cannot add a null file");
-		// set permissions
-		if (file.getEditPermissions() == null) {
-			file.setEditPermissions(getEditPermissions());
-		}
-
-		if (file.getReadPermissions() == null) {
-			file.setReadPermissions(getReadPermissions());
-		}
-
-		// set same owner as sessions owner
-		if (file.getOwner() == null)
-			file.setOwner(Util.getRemoteUser());
-
-		if (file.getOwner() == null) {
-			try {
-				file.setOwner(Util.getRemoteUser());
-			} catch (Exception e) {
-
-			}
-		}
-
-		file.absolutePath = getAbsolutePath() + "/" + name;
-		children.add(file);
-		file.setParent(this);
-
 	}
 
 	public String getEditPermissions() {
@@ -325,66 +238,55 @@ public class File {
 		return locked;
 	}
 
-	public List<File> getChildren() {
-		return children;
-	}
-
-	public void setChildren(List<File> children) {
-		this.children = children;
-	}
-
 	public Date getDateModified() {
 		return dateModified;
 	}
-	
-	
-	
-	
-	
-	public OutputStream getOutputStream()throws Exception{
-		OutputStream out = new BufferedOutputStream(new FileOutputStream(new java.io.File(ResourceUtil.getDirToWrite() + "/" + getAbsolutePath().replace('/', '_')), false),1024);
-		setUrl(ResourceUtil.getDirToWrite() + "/" + getAbsolutePath().replace('/', '_'));
+
+	public OutputStream getOutputStream() throws Exception {
+		OutputStream out = new BufferedOutputStream(new FileOutputStream(
+				new java.io.File(ResourceUtil.getDirToWrite() + "/" + getId()), false),
+				1024);
+		setUrl(ResourceUtil.getDirToWrite() + "/" + getId());
 		return out;
-		
+
 	}
 
-	
-	public void append(byte[] bytes)throws Exception{
-		OutputStream out = new BufferedOutputStream(new FileOutputStream(new java.io.File(ResourceUtil.getDirToWrite() + "/" + getAbsolutePath().replace('/', '_')), true),1024);
+	public void append(byte[] bytes) throws Exception {
+		OutputStream out = new BufferedOutputStream(new FileOutputStream(
+				new java.io.File(ResourceUtil.getDirToWrite() + "/" + getId()), true),
+				1024);
 		out.write(bytes);
 		out.flush();
 		out.close();
-		setUrl(ResourceUtil.getDirToWrite() + "/" + getAbsolutePath().replace('/', '_'));
-		
+		setUrl(ResourceUtil.getDirToWrite() + "/" + getId());
+
 	}
-	public InputStream getInputStream() throws Exception{
+
+	public InputStream getInputStream() throws Exception {
 		System.out.println("loading data from :" + url);
-		if(url != null){
+		if (url != null) {
 			return new BufferedInputStream(new FileInputStream(new java.io.File(url)));
 		}
-		
+
 		return null;
-		
+
 	}
 
-	
-	public void write(byte[] binaryData)throws Exception{
+	public void write(byte[] binaryData) throws Exception {
 		write(new ByteArrayInputStream(binaryData));
 	}
-	
-	public void write(InputStream in)throws Exception {
+
+	public void write(InputStream in) throws Exception {
 		OutputStream baop = getOutputStream();
-		
+
 		ChannelUtil.TransferData(in, baop);
 		baop.flush();
-		setUrl(ResourceUtil.getDirToWrite() + "/" + getAbsolutePath().replace('/', '_'));
-		//write( baop.toByteArray());
+		setUrl(ResourceUtil.getDirToWrite() + "/" + getId());
+		// write( baop.toByteArray());
 		baop.close();
 		setSize(1024);
-		
-	}
-	
 
+	}
 
 	public Boolean getDeleted() {
 		return deleted;
@@ -395,21 +297,11 @@ public class File {
 	}
 
 	public void setName(String name) {
-		
+
 		this.name = name;
 		String extension = ResourceUtil.getExtensionFromFileName(name);
-		if(extension.length() > 0)
+		if (extension.length() > 0)
 			this.mimeType = ResourceUtil.getMimeFromExtension(extension);
-	}
-	
-	
-	public File getChild(String name){
-		for(File f : getChildren()){
-			if(f.getName().equals(name)){
-				return f;
-			}
-		}
-		return null;
 	}
 
 	public String getType() {
@@ -418,6 +310,22 @@ public class File {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public List<Metadata> getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(List<Metadata> metadata) {
+		this.metadata = metadata;
+	}
+
+	public String getDrive() {
+		return drive;
+	}
+
+	public void setDrive(String drive) {
+		this.drive = drive;
 	}
 	
 	

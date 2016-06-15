@@ -11,7 +11,7 @@ public @interface Field {
 
 	int position();
 	
-	int formId();
+	int formId() default -1;
 
 	FieldType type() default FieldType.text;
 

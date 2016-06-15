@@ -14,22 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
- package org.castafiore.security.ui.users;
+package org.castafiore.security.ui.users;
 
-import org.castafiore.portal.ui.widgets.EXFormWidget;
+import org.castafiore.portal.ui.data.EXDataForm;
 import org.castafiore.security.SecurityService;
 import org.castafiore.security.model.User;
+import org.castafiore.ui.UIException;
 import org.castafiore.ui.ex.form.EXInput;
 import org.castafiore.ui.ex.form.EXPassword;
 import org.castafiore.utils.StringUtil;
 import org.castafiore.wfs.Util;
 
-public class EXAccountSettingForm extends EXFormWidget{
+public class EXAccountSettingForm extends EXDataForm<User> {
 
-	
 	private SecurityService service;
-	
+
 	private boolean isNew = false;
+
 	public EXAccountSettingForm(SecurityService service) {
 		super("EXAccountSettingForm", "Account setting");
 		this.service = service;
@@ -38,14 +39,13 @@ public class EXAccountSettingForm extends EXFormWidget{
 		addField("Confirm password :", new EXPassword("confirmPassword"));
 		addField("First name :", new EXInput("firstName"));
 		addField("Last name :", new EXInput("lastName"));
-		
 		addField("Phone :", new EXInput("phone"));
 		addField("Mobile :", new EXInput("mobile"));
-				
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void setUser(User user){
+	@Override
+	public void setModel(User user) {
 		getField("email").setValue(user.getUsername());
 		getField("password").setValue(user.getPassword());
 		getField("firstName").setValue(user.getFirstName());
@@ -53,21 +53,21 @@ public class EXAccountSettingForm extends EXFormWidget{
 		getField("email").setValue(user.getEmail());
 		getField("phone").setValue(user.getPhone());
 		getField("mobile").setValue(user.getMobile());
-		if(StringUtil.isNotEmpty(user.getUsername())){
-			((EXInput)getField("email")).setEnabled(false);
+		if (StringUtil.isNotEmpty(user.getUsername())) {
+			((EXInput) getField("email")).setEnabled(false);
 			isNew = false;
-		}else{
+		} else {
 			isNew = true;
 		}
-		
 	}
-	
-	public User save()throws Exception{
+
+	@Override
+	public User getModel() {
 		User u = null;
 		String username = getField("email").getValue().toString();
-		if(!isNew){
+		if (!isNew) {
 			u = service.loadUserByUsername(username);
-		}else{
+		} else {
 			u = new User();
 			u.setUsername(username);
 		}
@@ -83,15 +83,29 @@ public class EXAccountSettingForm extends EXFormWidget{
 		u.setMobile(getField("mobile").getValue().toString());
 		u.setOrganization(Util.getLoggedOrganization());
 		u.setMerchant(true);
-		if(!isNew){
+		if (!isNew) {
 			service.saveOrUpdateUser(u);
-		}else{
-			service.registerUser(u);
-			isNew = false;
+		} else {
+			try {
+				service.registerUser(u);
+				isNew = false;
+			} catch (Exception e) {
+				throw new UIException(e);
+			}
 		}
-		
+
 		return u;
-		//table_.setModel(table_.getModel());
+	}
+
+	@Override
+	public void validate() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void reset() {
+		setModel(new User());
 	}
 
 }

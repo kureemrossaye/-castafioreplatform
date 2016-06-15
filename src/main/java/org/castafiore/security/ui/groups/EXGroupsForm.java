@@ -16,52 +16,33 @@
  */
 package org.castafiore.security.ui.groups;
 
-import java.util.Map;
-
+import org.castafiore.portal.ui.data.EXDataForm;
 import org.castafiore.security.SecurityService;
 import org.castafiore.security.model.Group;
-import org.castafiore.ui.Container;
 import org.castafiore.ui.UIException;
-import org.castafiore.ui.engine.JQuery;
-import org.castafiore.ui.events.Event;
-import org.castafiore.ui.ex.dynaform.EXDynaformPanel;
 import org.castafiore.ui.ex.form.EXInput;
 import org.castafiore.ui.ex.form.EXTextArea;
-import org.castafiore.ui.ex.form.button.EXButton;
-import org.castafiore.ui.ex.form.table.EXTable;
 
-public class EXGroupsForm extends EXDynaformPanel implements Event {
+public class EXGroupsForm extends EXDataForm<Group>  {
 
 	private SecurityService service;
 
-	private EXButton btnSave = new EXButton("Save", "Save");
-
-	private EXButton btnCancel = new EXButton("cancel", "Cancel");
 	
-	private EXTable table;
 
-	public EXGroupsForm(SecurityService service, EXTable table) {
+	public EXGroupsForm(SecurityService service) {
 		super("Group", "Group");
-		this.table = table;
 		this.service = service;
-		addField("Name :", new EXInput("name"));
+		addField("Name", new EXInput("name"));
 		addField("Description", new EXTextArea("description"));
 		
-		addButton(btnCancel);
-		addButton(btnSave);
-		btnCancel.setType(EXButton.TYPE_LINK).addEvent(this, CLICK);
-		btnSave.setType(EXButton.TYPE_SUCCESS);
-		btnSave.addEvent(this, Event.CLICK);
-
 	}
 
 	@SuppressWarnings("unchecked")
-	public void setGroup(String name) throws Exception {
+	public void setModel(Group group)  {
+		String name = group.getName();
 		if (name != null) {
 			getField("name").setValue(name);
 			((EXInput) getField("name")).setEnabled(false);
-
-			Group group = service.getGroup(name);
 			getField("description").setValue(group.getDescription());
 			setTitle("Edit Group");
 		}else{
@@ -70,46 +51,35 @@ public class EXGroupsForm extends EXDynaformPanel implements Event {
 			setTitle("Create new group");
 		}
 	}
+	
+	public Group getModel(){
+		try{
+			return doSave();
+		}catch(Exception e){
+			throw new UIException(e);
+		}
+	}
 
-	public Group save() throws Exception {
+	public Group doSave() throws Exception {
 		String name = getField("name").getValue().toString();
 		String description = getField("description").getValue().toString();
 		Group group = service.saveOrUpdateGroup(name, description);
 		group.setDescription(description);
-		this.close();
-		table.setModel(new GroupsTableModel(service));
-		table.refresh();
 
 		return group;
 
 	}
 
 	@Override
-	public void ClientAction(JQuery container) {
-		container.server(this);
+	public void validate() {
 		
-	}
-	
-	
-
-	@Override
-	public boolean ServerAction(Container container, Map<String, String> request) throws UIException {
-		if(container.equals(btnCancel)){
-			//container.addCommand(jquery)
-			close();
-		}else{
-			try{
-				save();
-			}catch(Exception e){
-				throw new UIException(e);
-			}
-		}
-		return true;
 	}
 
 	@Override
-	public void Success(JQuery container, Map<String, String> request) throws UIException {
+	public void reset() {
+		setModel(new Group());
 		
 	}
+
 
 }

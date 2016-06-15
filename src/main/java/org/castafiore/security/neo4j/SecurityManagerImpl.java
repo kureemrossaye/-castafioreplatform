@@ -48,17 +48,7 @@ public class SecurityManagerImpl  implements SecurityManager {
 		}
 		
 		  
-		if(perm == null){
-			File parent = file.getParent();
-			if(parent == null){
-				return null;
-			}
-			else {
-				return getRecursivePermission(file.getParent(), type);
-			}
-		}else{
 			return perm;
-		}
 	}
 
 	public void checkRead(File file, String remoteUser) throws InsufficientPriviledgeException {
@@ -74,7 +64,7 @@ public class SecurityManagerImpl  implements SecurityManager {
 		if(remoteUser == null)
 		{
 			
-			throw new InsufficientPriviledgeException(file, "should be logged in to access the file " + file.getAbsolutePath(), remoteUser);
+			throw new InsufficientPriviledgeException(file, "should be logged in to access the file " + file.getName(), remoteUser);
 		}
 		//if(remoteUser.equals(service.getSuperUser()))
 			//return;
@@ -133,7 +123,7 @@ public class SecurityManagerImpl  implements SecurityManager {
 			//return;
 		
 		if(file != null){
-			System.out.println("Check write on :" + file.getAbsolutePath() + " user : " + remoteUser);
+			System.out.println("Check write on :" + file.getName() + " user : " + remoteUser);
 		}
 		
 		

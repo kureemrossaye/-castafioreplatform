@@ -28,10 +28,23 @@
 			<version>3.3</version>
 		</dependency>
 		<dependency>
+    <groupId>org.jodd</groupId>
+    <artifactId>jodd-bean</artifactId>
+    <version>3.7.1</version>
+</dependency>
+		
+		<dependency>
 			<groupId>org.jodd</groupId>
-			<artifactId>jodd</artifactId>
-			<version>3.3.8</version>
+			<artifactId>jodd-core</artifactId>
+			<version>3.7.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-mail</artifactId>
+			<version>3.7.1</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
@@ -48,11 +61,8 @@
 		</dependency>
 
 		<!-- http://mvnrepository.com/artifact/org.jbpm/jbpm-bpmn2 -->
-		<!-- dependency>
-			<groupId>org.jbpm</groupId>
-			<artifactId>jbpm-bpmn2</artifactId>
-			<version>6.4.0.Final</version>
-		</dependency-->
+		<!-- dependency> <groupId>org.jbpm</groupId> <artifactId>jbpm-bpmn2</artifactId> 
+			<version>6.4.0.Final</version> </dependency -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

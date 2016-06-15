@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import org.castafiore.portal.ui.widgets.EXFormWidget;
+import org.castafiore.portal.ui.data.EXDataForm;
 import org.castafiore.security.SecurityService;
 import org.castafiore.security.model.Group;
 import org.castafiore.security.model.Role;
@@ -19,7 +19,7 @@ import org.castafiore.ui.ex.form.list.DefaultDataModel;
 import org.castafiore.ui.ex.form.list.EXSelect;
 import org.castafiore.utils.StringUtil;
 
-public class EXPermissionsForm extends EXFormWidget implements Event {
+public class EXPermissionsForm extends EXDataForm<User> implements Event {
 
 	private SecurityService service;
 
@@ -30,6 +30,7 @@ public class EXPermissionsForm extends EXFormWidget implements Event {
 	private EXSelect<Role> roles_ = null;
 
 	private EXSelect<Group> groups_ = null;
+	
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public EXPermissionsForm( User user,  SecurityService service,EXPermissionsTable table) {
@@ -98,6 +99,28 @@ public class EXPermissionsForm extends EXFormWidget implements Event {
 	@Override
 	public void Success(JQuery container, Map<String, String> request) throws UIException {
 
+	}
+
+	@Override
+	public void setModel(User model) {
+		this.user_ = model;
+		
+	}
+
+	@Override
+	public User getModel() {
+		return user_;
+	}
+
+	@Override
+	public void validate() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void reset() {
+		table_.setUser(null);
 	}
 
 }

@@ -11,8 +11,8 @@ public @interface Form {
 	
 	
 	String name() default "";
-	String label();
+	String label() default "";
 	
-	int id();
+	int id() default  -1;
 
 }

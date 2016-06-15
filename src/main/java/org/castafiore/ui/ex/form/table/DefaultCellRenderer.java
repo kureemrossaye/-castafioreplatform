@@ -19,49 +19,39 @@ package org.castafiore.ui.ex.form.table;
 
 import org.castafiore.ui.Container;
 import org.castafiore.ui.ex.EXContainer;
+
 /**
  * 
  * 
  * @author Kureem Rossaye<br>
- *          kureem@gmail.com
- * Oct 22, 2008
+ *         kureem@gmail.com Oct 22, 2008
  */
 public class DefaultCellRenderer implements CellRenderer {
-	
+
 	public final static CellRenderer INSTANCE = new DefaultCellRenderer();
 
-	public Container getComponentAt(int row, int column,int page, TableModel model,
-			EXTable table) {
+	public Container getComponentAt(int row, int column, int page, TableModel model, EXTable table) {
 		Object value = model.getValueAt(column, row, page);
-		
+
 		EXContainer span = new EXContainer("", "span");
-		if(value == null)
-		{
+		if (value == null) {
 			span.setText(" ");
-		}
-		else
-		{
+		} else {
 			span.setText(value.toString());
 		}
 		return span;
 	}
 
-	public void onChangePage(Container component,  int row,	int column,int page, TableModel model, EXTable table) 
-	{
+	public void onChangePage(Container component, int row, int column, int page, TableModel model, EXTable table) {
 		Object newValue = model.getValueAt(column, row, page);
-		EXContainer span = (EXContainer)component;
-		if(newValue == null)
-		{
+		EXContainer span = (EXContainer) component;
+		if (newValue == null) {
 			span.setText(" ");
-		}
-		else
-		{
+		} else {
 			span.setText(newValue.toString());
 		}
 		span.setRendered(false);
-		
-	}
 
-	
+	}
 
 }

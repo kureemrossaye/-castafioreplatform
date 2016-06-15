@@ -5,7 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import org.castafiore.portal.ui.widgets.EXFormWidget;
+import org.castafiore.portal.ui.data.EXDataForm;
+import org.castafiore.portal.ui.data.EXDataGrid;
 import org.castafiore.portal.ui.widgets.EXWizardWidget;
 import org.castafiore.ui.StatefullComponent;
 import org.castafiore.ui.ex.form.EXCheckBox;
@@ -30,20 +31,52 @@ public class UIBuilder {
 	@Autowired
 	MessageSource messageSource;
 	
-	public EXWizardWidget createWizard(Class<?> clazz){
+	public <T> EXWizardWidget createWizard(Class<T> clazz){
 		Wizard wizard = clazz.getAnnotation(Wizard.class);
 		Form[] forms = wizard.forms();
 		EXWizardWidget wiz = new EXWizardWidget(clazz.getName() + "Wizard", wizard.title());
 		for(Form form : forms){
-			EXFormWidget widget = createForm(form, clazz);
+			EXDataForm<T> widget = createForm(form, clazz);
 			wiz.addStep(form.label(), widget);
 		}
 		return wiz;
 	}
 	
 	
-	public EXFormWidget createForm(Form form, Class<?> clazz){
-		EXFormWidget formWidget = new EXFormWidget(form.id() +"",form.label());
+	public <T> EXDataForm<T> createForm(Form form, Class<T> clazz){
+		EXDataForm<T> formWidget = new EXDataForm<T>(form.id() +"",form.label()){
+
+			@Override
+			public void setModel(T model) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public T getModel() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public void validate() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void reset() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void setDataGrid(EXDataGrid<T> grid) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		};
 		ReflectionUtils.doWithFields(clazz, new FieldCallback() {
 			
 			@Override

@@ -28,7 +28,7 @@ public class InsufficientPriviledgeException extends RepositoryException {
 	
 	public InsufficientPriviledgeException(File f, String permissionType, String username)
 	{
-		super( "user " + username + " does not have the required permission to "+permissionType+" the file: " + f.getAbsolutePath());
+		super( "user " + username + " does not have the required permission to "+permissionType+" the file: " + f.getName());
 	}
 
 }

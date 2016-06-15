@@ -16,10 +16,11 @@
  */
 package org.castafiore.security.ui;
 
-import org.castafiore.portal.PortalService;
+import org.castafiore.portal.ui.portlets.EXOrganizationManager;
 import org.castafiore.security.SecurityService;
 import org.castafiore.ui.ex.EXApplication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,7 @@ public class CommunityApplication extends EXApplication {
 
 	
 	@Autowired
-	public CommunityApplication(SecurityService service, PortalService portalService) {
+	public CommunityApplication(SecurityService service, MessageSource portalService) {
 		super("community");
 		addChild(new EXOrganizationManager(service, portalService));
 	}

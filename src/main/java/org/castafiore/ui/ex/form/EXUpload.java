@@ -37,7 +37,7 @@ public class EXUpload extends EXGroovyContainer implements StatefullComponent<Li
 	private List<FileData> items = new ArrayList<FileData>();
 	public EXUpload(String name)
 	{
-		super(name, "sd.html");
+		super(name, "templates/EXUpload.xhtml");
 	}
 	public FileData getFile() {
 		if(items.size() == 0)

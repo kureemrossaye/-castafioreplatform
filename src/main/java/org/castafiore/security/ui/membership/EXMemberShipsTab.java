@@ -1,130 +1,64 @@
 package org.castafiore.security.ui.membership;
 
-import java.util.Map;
+import java.util.List;
 
+import org.castafiore.portal.ui.data.DataGridController;
+import org.castafiore.portal.ui.data.EXDataGrid;
+import org.castafiore.portal.ui.data.SimpleDataLocator;
 import org.castafiore.security.SecurityService;
-import org.castafiore.ui.Container;
+import org.castafiore.security.model.Role;
 import org.castafiore.ui.UIException;
-import org.castafiore.ui.engine.JQuery;
-import org.castafiore.ui.events.Event;
 import org.castafiore.ui.ex.EXContainer;
-import org.castafiore.ui.ex.form.button.EXButton;
-import org.castafiore.ui.ex.form.button.EXButtonSet;
-import org.castafiore.ui.ex.form.table.EXTable;
-import org.castafiore.ui.ex.form.table.Table;
-import org.castafiore.ui.ex.form.table.TableModel;
-import org.castafiore.ui.ex.form.table.EXTable.RowSelectionListener;
-import org.castafiore.ui.ex.toolbar.EXToolBar;
+import org.springframework.context.MessageSource;
 
-public class EXMemberShipsTab extends EXContainer implements Event, RowSelectionListener {
-
-	private EXTable table = null;
-
-	private EXMembershipForm form = null;
-
-	private EXButton addNew = new EXButton("addNew", "Add New");
-
-	private EXButton edit = new EXButton("edit", "Edit");
-
-	private EXButton delete = new EXButton("delete", "Delete");
+public class EXMemberShipsTab extends EXContainer implements DataGridController<Role> {
 
 	private SecurityService service;
 
-	public EXMemberShipsTab(String name, SecurityService service) {
-
+	public EXMemberShipsTab(String name, SecurityService service, MessageSource messageSource) {
 		super(name, "div");
+		this.service = service;
+		SimpleDataLocator<Role> locator = new SimpleDataLocator<Role>(Role.class, messageSource) {
+
+			@Override
+			public List<Role> loadAll() {
+
+				try {
+					return service.getRoles();
+				} catch (Exception e) {
+					throw new UIException(e);
+				}
+			}
+
+		};
+
+		EXDataGrid<Role> grid = new EXDataGrid<>(Role.class, locator, this, new EXMembershipForm("", messageSource));
+		addChild(grid);
+	}
+
+	@Override
+	public void insertRecord(Role record) {
+
 		try {
-			this.service = service;
-			EXToolBar toolbar = new EXToolBar("tb");
-			EXButtonSet set = new EXButtonSet("set");
-			set.addItem(addNew).addItem(edit).addItem(delete);
-			toolbar.addItem(set);
-			edit.setEnabled(false);
-			delete.setEnabled(false);
-			delete.addEvent(this, CLICK);
-			edit.addEvent(this, CLICK);
-			addNew.addEvent(this, CLICK);
-			addChild(toolbar);
-
-			table = new EXTable("membershipList", new MembershipTableModel(service));
-			table.setCellRenderer(new MembershipCellRenderer());
-			table.setColumnModel(new MembershipColumnModel());
-			table.addRowSelectionListener(this);
-			addChild(table);
+			service.saveOrUpdateRole(record.getName(), record.getDescription());
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new UIException(e);
 		}
-
-		form = new EXMembershipForm(service, table);
-
-		addChild(form);
 	}
 
 	@Override
-	public void ClientAction(JQuery container) {
-		if(container.getId().equals(delete.getId())){
-			container.alert("Do you really want to delete this membership?", container.clone().server(this));
-		}else{
-			container.server(this);
+	public void deleteRecord(Role record) {
+
+		try {
+			service.deleteRole(record.getName());
+		} catch (Exception e) {
+			throw new UIException(e);
 		}
-
 	}
 
 	@Override
-	public boolean ServerAction(Container container, Map<String, String> request) throws UIException {
-
-		if (container.equals(addNew)) {
-			try {
-
-				form.setMembership(null);
-				form.open();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		} else if (container.equals(edit)) {
-			try {
-				Integer[] index = table.getSelectedRows().get(0);
-
-				String g = table.getModel().getValueAt(0, index[0], index[1]).toString();
-
-				form.setMembership(g);
-				form.open();
-				form.setTitle("Edit membership - " + g);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		} else {
-
-			String name = table.getModel()
-					.getValueAt(0, table.getSelectedRows().get(0)[0], table.getSelectedRows().get(0)[1]).toString();
-			try {
-				service.deleteRole(name);
-				table.setModel(new MembershipTableModel(service));
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new UIException(e);
-			}
-		}
-
-		return true;
-	}
-
-	@Override
-	public void Success(JQuery container, Map<String, String> request) throws UIException {
-
-	}
-	
-	@Override
-	public void onRowSelected(Table table, TableModel model, int row, int page) {
-		edit.setEnabled(true);
-		delete.setEnabled(true);
-		
-	}
-
-	@Override
-	public void onRowDeSelected(Table table, TableModel model, int row, int page) {
-		edit.setEnabled(false);
-		delete.setEnabled(false);
+	public void updateRecord(Role record) {
+		insertRecord(record);
 	}
 
 }

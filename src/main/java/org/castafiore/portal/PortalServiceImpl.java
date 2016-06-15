@@ -54,6 +54,7 @@ public class PortalServiceImpl implements PortalService, ApplicationContextAware
 		if (true) {
 			return PortalUtil.getAdminPortal();
 		}
+		@SuppressWarnings("unused")
 		long count = portalRepository.count();
 		if (count <= 0) {
 			Portal portal = PortalUtil.getAdminPortal();

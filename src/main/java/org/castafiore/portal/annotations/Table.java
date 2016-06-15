@@ -9,9 +9,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Table {
 
-	String label();
+	String label() default "";
 
-	int id();
+	int id() default -1;
 
 	String name() default "";
 }

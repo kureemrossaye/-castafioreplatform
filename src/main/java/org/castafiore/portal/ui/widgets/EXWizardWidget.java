@@ -20,9 +20,9 @@ public class EXWizardWidget extends EXWidget implements Event {
 
 	private Container actionBar = new EXContainer("actionBar", "div").addClass("actionBar");
 	
-	private boolean enableFinishButton = false; 
+//	private boolean enableFinishButton = false; 
 	
-	private List<Integer> errorSteps = new LinkedList<Integer>();
+	//private List<Integer> errorSteps = new LinkedList<Integer>();
 	
 	private String labelNext = "Next";
 	
@@ -68,13 +68,12 @@ public class EXWizardWidget extends EXWidget implements Event {
 		for(WizardEventHandler handler : handlers){
 			handler.onFinish();
 		}
-		
-		move(steps.getChildren().size()-currentStep);
+		reset();
 	}
 	
 	public void reset(){
 		currentStep = -1;
-		move(0);
+		move(1);
 	}
 	
 	public void move(int iSteps){
@@ -86,7 +85,7 @@ public class EXWizardWidget extends EXWidget implements Event {
 		
 		currentStep = currentStep + iSteps;
 		
-		if(currentStep >= steps.getChildren().size()+1 || currentStep <= -1){
+		if(currentStep >= steps.getChildren().size()+1 || currentStep < -1){
 			currentStep = currentStep - iSteps;
 			return;
 		}
@@ -97,8 +96,13 @@ public class EXWizardWidget extends EXWidget implements Event {
 		}
 		
 		for(WizardEventHandler handler : handlers){
-			if(leaving != null)
-				handler.onLeaveStep(currentStep-iSteps, leaving);
+			if(leaving != null){
+				if(iSteps < 0){
+					handler.cancel();
+				}else{
+					handler.onLeaveStep(currentStep-iSteps, leaving);
+				}
+			}
 			if(showing != null)
 				handler.onShowStep(currentStep, showing);
 		}
@@ -204,6 +208,8 @@ public class EXWizardWidget extends EXWidget implements Event {
 		public void onShowStep(Integer step, EXWidget widget);
 
 		public void onFinish();
+		
+		public void cancel();
 		
 	}
 

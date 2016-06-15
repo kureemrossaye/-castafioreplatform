@@ -16,111 +16,17 @@
  */
  package org.castafiore.security.ui.membership;
 
-import java.util.Map;
-
-import org.castafiore.security.SecurityService;
+import org.castafiore.portal.ui.data.EXEntityDataForm;
 import org.castafiore.security.model.Role;
-import org.castafiore.ui.Container;
-import org.castafiore.ui.UIException;
-import org.castafiore.ui.engine.JQuery;
-import org.castafiore.ui.events.Event;
-import org.castafiore.ui.ex.dynaform.EXDynaformPanel;
-import org.castafiore.ui.ex.form.EXInput;
-import org.castafiore.ui.ex.form.EXTextArea;
-import org.castafiore.ui.ex.form.button.EXButton;
-import org.castafiore.ui.ex.form.table.EXTable;
-import org.castafiore.utils.StringUtil;
+import org.springframework.context.MessageSource;
 
-public class EXMembershipForm extends EXDynaformPanel implements Event{
+public class EXMembershipForm extends EXEntityDataForm<Role> {
 
-	private SecurityService service;
-	
-	private EXButton btnSave = new EXButton("Save", "Save");
-
-	private EXButton btnCancel = new EXButton("cancel", "Cancel");
-	
-	private EXTable table;
-
-	
-	public EXMembershipForm(SecurityService service, EXTable table) {
-		super("membershipForm", "Membership");
-		this.service = service;
-		addField("Name :", new EXInput("name"));
-		addField("Description :",new EXTextArea("description"));
-		addButton(btnSave);
-		addButton(btnCancel);
-		
-		
-		addButton(btnCancel);
-		addButton(btnSave);
-		btnCancel.setType(EXButton.TYPE_LINK).addEvent(this, CLICK);
-		btnSave.setType(EXButton.TYPE_SUCCESS);
-		btnSave.addEvent(this, Event.CLICK);
-		
-		this.table = table;
-	}
-	
-	
-	@SuppressWarnings("unchecked")
-	public void setMembership(String name)throws Exception{
-		if(name != null){
-			getField("name").setValue(name);
-			((EXInput)getField("name")).setEnabled(false);
-			
-			Role role = service.getRole(name);
-			getField("description").setValue(role.getDescription());
-		}else{
-			getField("name").setValue("");
-			((EXInput)getField("name")).setEnabled(true);
-			getField("description").setValue("");
-		}
-	}
-	
-	public Role save()throws Exception{
-		String name = getField("name").getValue().toString();
-		String description = getField("description").getValue().toString();
-		if(!StringUtil.isNotEmpty(name)){
-			getField("name").addClass("ui-state-error");
-		}else{
-			Role result = service.saveOrUpdateRole(name, description);
-			this.close();
-			table.setModel(new MembershipTableModel(service));
-			table.refresh();
-			return result;
-			
-		}
-		return null;
+	public EXMembershipForm(String name, MessageSource messageSource) {
+		super(name, Role.class, messageSource);
+		// TODO Auto-generated constructor stub
 	}
 
-
-	@Override
-	public void ClientAction(JQuery container) {
-		container.server(this);
-	}
-
-
-	@Override
-	public boolean ServerAction(Container container, Map<String, String> request) throws UIException {
-		if(container.equals(btnCancel)){
-			close();
-		}else{
-			try{
-			save();
-			}catch(Exception e){
-				throw new UIException(e);
-			}
-		}
-		
-		return true;
-	}
-
-
-	@Override
-	public void Success(JQuery container, Map<String, String> request) throws UIException {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	
 
 }

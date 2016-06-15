@@ -23,6 +23,8 @@ import org.castafiore.wfs.InsufficientPriviledgeException;
 import org.castafiore.wfs.LockedFileException;
 import org.castafiore.wfs.types.File;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 /**
@@ -43,6 +45,7 @@ public interface RepositoryService {
 	 */
 	public String getSuperUser();
 	
+	public Page<File> getFiles(String username, Pageable params);
 	
 	
 	/**

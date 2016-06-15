@@ -58,6 +58,11 @@ public class EXModal extends EXContainer implements Panel{
 		
 	}
 	
+	public EXModal pack(){
+		modalBody.setStyle("padding", "0px");
+		return this;
+	}
+	
 	public EXModal setSize(String size){
 		for(String s : SIZES){
 			modalDialog.removeClass(s);

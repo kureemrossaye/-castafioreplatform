@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.castafiore.portal.annotations.Column;
+import org.castafiore.portal.annotations.Table;
 import org.castafiore.utils.StringUtil;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -34,12 +36,14 @@ import org.neo4j.ogm.annotation.NodeEntity;
  *         kureem@gmail.com Oct 22, 2008
  */
 @NodeEntity
+@Table
 public class User implements Serializable {
 
 
 	@GraphId
 	private Long id;
 
+	@Column(position=0)
 	private String username;
 
 	private String password;
@@ -48,14 +52,17 @@ public class User implements Serializable {
 
 	private String maritalStatus;
 
+	@Column(position=1)
 	private String firstName;
 
+	@Column(position=2)
 	private String lastName;
 
 	private String email;
 
 	private String phone;
 
+	@Column(position=3)
 	private String mobile;
 
 	private boolean enabled = true;

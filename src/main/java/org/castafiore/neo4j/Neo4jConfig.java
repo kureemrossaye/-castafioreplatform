@@ -26,9 +26,7 @@ class Neo4jConfig extends Neo4jConfiguration {
     @Bean
     public org.neo4j.ogm.config.Configuration getConfiguration() {
         org.neo4j.ogm.config.Configuration config = new org.neo4j.ogm.config.Configuration();
-        config
-                .driverConfiguration()
-                .setDriverClassName("org.neo4j.ogm.drivers.http.driver.HttpDriver")
+        config.driverConfiguration()                .setDriverClassName("org.neo4j.ogm.drivers.http.driver.HttpDriver")
                 .setURI(URL);
         return config;
     }

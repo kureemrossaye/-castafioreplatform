@@ -16,7 +16,7 @@
  */
 package org.castafiore.security.ui.users;
 
-import org.castafiore.portal.ui.widgets.EXFormWidget;
+import org.castafiore.portal.ui.data.EXDataForm;
 import org.castafiore.security.SecurityService;
 import org.castafiore.security.model.Address;
 import org.castafiore.security.model.User;
@@ -24,12 +24,12 @@ import org.castafiore.ui.UIException;
 import org.castafiore.ui.ex.form.EXInput;
 import org.castafiore.utils.StringUtil;
 
-public class EXProfileForm extends EXFormWidget {
+public class EXProfileForm extends EXDataForm<User> {
 
 	private SecurityService service;
 
-	
 	private User user_;
+
 	public EXProfileForm(SecurityService service) {
 		super("EXProfileForm", "Address");
 		this.service = service;
@@ -42,7 +42,8 @@ public class EXProfileForm extends EXFormWidget {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void setUser(User user) {
+	@Override
+	public void setModel(User user) {
 		this.user_ = user;
 		if (user.getUsername() != null) {
 			Address a = user.getDefaultAddress();
@@ -55,9 +56,11 @@ public class EXProfileForm extends EXFormWidget {
 			}
 
 		}
+
 	}
 
-	public User save() throws Exception {
+	@Override
+	public User getModel() {
 		String username = user_.getUsername();
 
 		if (StringUtil.isNotEmpty(username)) {
@@ -78,7 +81,19 @@ public class EXProfileForm extends EXFormWidget {
 		} else {
 			throw new UIException("Please save the user first before saving its address");
 		}
+	}
 
+	@Override
+	public void validate() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void reset() {
+		User u  = new User();
+		u.addAddress(new Address());
+		setModel(u);
 	}
 
 }

@@ -16,6 +16,8 @@
  */
 package org.castafiore.security.ui.users;
 
+import org.castafiore.portal.ui.data.DataForm;
+import org.castafiore.portal.ui.data.EXDataGrid;
 import org.castafiore.portal.ui.widgets.EXWidget;
 import org.castafiore.portal.ui.widgets.EXWizardWidget;
 import org.castafiore.portal.ui.widgets.EXWizardWidget.WizardEventHandler;
@@ -23,10 +25,9 @@ import org.castafiore.security.SecurityService;
 import org.castafiore.security.model.User;
 import org.castafiore.security.ui.users.permissions.EXPermissionTab;
 import org.castafiore.ui.UIException;
-import org.castafiore.ui.ex.form.table.EXTable;
 import org.castafiore.utils.StringUtil;
 
-public class EXUserForm extends EXWizardWidget implements WizardEventHandler {
+public class EXUserForm extends EXWizardWidget implements WizardEventHandler, DataForm<User> {
 
 	private User user_;
 
@@ -38,14 +39,14 @@ public class EXUserForm extends EXWizardWidget implements WizardEventHandler {
 
 	private SecurityService service;
 
-	private EXTable table_;
+	private EXDataGrid<User> table_;
 
 	private boolean isNew = false;
 
-	public EXUserForm(User user, SecurityService service, EXTable table) {
+	public EXUserForm(User user, SecurityService service) {
 		super("EXUserForm", "Create / Edit User");
 		this.user_ = user;
-		this.table_ = table;
+		//this.table_ = table;
 		this.service = service;
 		accountSetting = new EXAccountSettingForm(service);
 		profile = new EXProfileForm(service);
@@ -59,58 +60,82 @@ public class EXUserForm extends EXWizardWidget implements WizardEventHandler {
 
 	}
 
-	public void setUser(User u) {
-		this.user_ = u;
-		if (StringUtil.isNotEmpty(u.getUsername())) {
-			isNew = false;
-		} else {
-			isNew = true;
-		}
-		accountSetting.setUser(user_);
-		profile.setUser(user_);
-		permission.setUser(user_);
-	}
 
 	@Override
 	public void onLeaveStep(Integer step, EXWidget widget) {
 		try {
 			if (step == 0) {
-				this.user_ = accountSetting.save();
+				this.user_ = accountSetting.getModel();
 			} else if (step == 1) {
 
-				this.user_ = profile.save();
+				this.user_ = profile.getModel();
 				if (isNew) {
 					service.saveOrUpdateUser(user_);
 					isNew = false;
 				} else {
 					service.saveOrUpdateUser(user_);
 				}
-				table_.setModel(table_.getModel());
+				table_.getTable().setModel(table_.getTable().getModel());
 			} else {
 				// this.user_ =
 			}
 		} catch (Exception e) {
 			throw new UIException(e);
 		}
-
 	}
 
 	@Override
 	public void onShowStep(Integer step, EXWidget widget) {
 		if (step == 0) {
-			accountSetting.setUser(user_);
+			accountSetting.setModel(user_);
 		} else if (step == 1) {
-			profile.setUser(user_);
+			profile.setModel(user_);
 		} else {
-			permission.setUser(user_);
+			permission.setModel(user_);
 		}
 	}
 
 	@Override
 	public void onFinish() {
-		this.setDisplay(false);
-		table_.setDisplay(true);
+		table_.finish();
+	}
 
+	@Override
+	public void setModel(User u) {
+		this.user_ = u;
+		if (StringUtil.isNotEmpty(u.getUsername())) {
+			isNew = false;
+		} else {
+			isNew = true;
+		}
+		accountSetting.setModel(user_);
+		profile.setModel(user_);
+		permission.setModel(user_);
+	}
+
+	@Override
+	public User getModel() {
+		return user_;
+	}
+
+	@Override
+	public void validate() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	
+	@Override
+	public void cancel() {
+		table_.cancel();
+	}
+
+
+	@Override
+	public void setDataGrid(EXDataGrid<User> grid) {
+		this.table_ = grid;
+		
 	}
 
 }

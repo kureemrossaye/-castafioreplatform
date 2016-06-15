@@ -19,6 +19,11 @@ package org.castafiore.security.model;
 
 import java.io.Serializable;
 
+import org.castafiore.portal.annotations.Column;
+import org.castafiore.portal.annotations.Field;
+import org.castafiore.portal.annotations.FieldType;
+import org.castafiore.portal.annotations.Form;
+import org.castafiore.portal.annotations.Table;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 
@@ -29,6 +34,8 @@ import org.neo4j.ogm.annotation.NodeEntity;
  *         kureem@gmail.com Oct 22, 2008
  */
 @NodeEntity
+@Table
+@Form
 public class Role implements Serializable {
 
 	/**
@@ -36,13 +43,21 @@ public class Role implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String description;
+	
 
 	@GraphId
 	private Long id;
 
+	@Field(position=0)
+	@Column(position=0)
 	private String name;
+	
+	
+	@Field(position=1, type=FieldType.textarea)
+	@Column(position=1)
+	private String description;
 
+	
 	public String getDescription() {
 		return description;
 	}

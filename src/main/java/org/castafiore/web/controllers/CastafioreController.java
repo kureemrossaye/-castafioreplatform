@@ -37,11 +37,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.map.ListOrderedMap;
-import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.castafiore.ComponentNotFoundException;
 import org.castafiore.Constant;
+import org.castafiore.portal.ui.EXDropzone;
 import org.castafiore.resource.BinaryFileData;
 import org.castafiore.resource.FileData;
 import org.castafiore.ui.Application;
@@ -50,12 +50,10 @@ import org.castafiore.ui.Container;
 import org.castafiore.ui.UIException;
 import org.castafiore.ui.engine.CastafioreEngine;
 import org.castafiore.ui.engine.context.CastafioreApplicationContextHolder;
-import org.castafiore.ui.ex.form.EXUpload;
 import org.castafiore.ui.interceptors.InterceptorRegistry;
 import org.castafiore.ui.js.JSObject;
 import org.castafiore.utils.ChannelUtil;
 import org.castafiore.utils.ComponentUtil;
-import org.castafiore.utils.IOUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -67,6 +65,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import jodd.io.FileUtil;
 /**
  * 
  * @author Kureem Rossaye<br>
@@ -209,6 +212,8 @@ public class CastafioreController implements ResourceLoaderAware, ApplicationCon
 	    out.close();
 	}
 
+         
+
 
 
 
@@ -226,7 +231,12 @@ public class CastafioreController implements ResourceLoaderAware, ApplicationCon
 		{
 			//Map pro = BaseSpringUtil.getBean("uploadprops");
 	    	
+			MultipartHttpServletRequest r = (MultipartHttpServletRequest)request;
+			
+			Map<String, MultipartFile> files = r.getFileMap();
+			
 			ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory(1024, new File("")));
+			
 			
 			// set file upload progress listener
 			FileUploadListener 
@@ -242,49 +252,39 @@ public class CastafioreController implements ResourceLoaderAware, ApplicationCon
 			upload.setProgressListener(listener);
 			
 			
-			Iterator<?> iter =upload.parseRequest(request).iterator();
+			Iterator<String> iter = files.keySet().iterator();//upload.parseRequest(request).iterator();
 			//FileItemIterator iter = upload.getItemIterator(request);
-			String applicationId = null;
-	    	String componentId = null;
-	    	EXUpload exUpload = null;
-	    	Application applicationInstance = null;
+			String applicationId = r.getParameter("casta_applicationid");
+	    	String componentId = r.getParameter("casta_componentid");;
+	    	EXDropzone exUpload = null;
+	    	Application applicationInstance = (Application)request.getSession().getAttribute(applicationId);
 	    	List<FileData> ds = new ArrayList<FileData>();
 	    	//String name = null;
 			while (iter.hasNext()) 
 			{
-			    FileItem item = (FileItem)iter.next();
+				String key = iter.next();
+				
+				MultipartFile item = files.get(key);
+			    //FileItem item = (FileItem)iter.next();
 			    
 			    
-			    if (item.isFormField()) {
-			        if(item.getFieldName().equals("casta_applicationid")){
-			        	applicationId = IOUtil.getStreamContentAsString(item.getInputStream());
-			        	//logger.debug("applicationid for upload:" + applicationId);
-			        	applicationInstance = (Application)request.getSession().getAttribute(applicationId);
-			        }
-			        else if(item.getFieldName().equalsIgnoreCase("casta_componentid")){
-			        	componentId = IOUtil.getStreamContentAsString(item.getInputStream());
-			        	//logger.debug("componentid for upload:" + componentId);
-			        }
-			    } 
-			    else 
-			    {
 			    	FileData bFile = null;
-			    	System.out.println(item.getName());
-			    	String name = item.getName();
 			    	//logger.debug("opening client stream...");
-			    	File savedFile = new File("/" +new Date().getTime() + "_" + item.getName()); //new File(request.getRealPath("/")+"uploadedFiles/"+name);
+			    	File savedFile = new File("/" +new Date().getTime() + "_" + item.getOriginalFilename()); //new File(request.getRealPath("/")+"uploadedFiles/"+name);
 			    	
-			    	item.write(savedFile);
-			    				    	
+			    	String fileName =item.getOriginalFilename();
+			    	//String contentType =item.getContentType();
+			    	FileUtil.writeBytes(savedFile, item.getBytes());
+			    	
+			    	
 			    	bFile = getNewInstance();
 			    	bFile.setUrl(savedFile.getAbsolutePath());
-			    	bFile.setName(item.getName());
-			    	bFile.setName(name);
+			    	bFile.setName(fileName);
+			    	
 			    	ds.add(bFile);
-			    }
 			}
 			System.out.println(componentId);
-			exUpload = (EXUpload)applicationInstance.getDescendentById(componentId);
+			exUpload = (EXDropzone)applicationInstance.getDescendentById(componentId);
 			System.out.println(exUpload);
 
 			
@@ -313,7 +313,7 @@ public class CastafioreController implements ResourceLoaderAware, ApplicationCon
 	
 
 	
-	@RequestMapping("/ui")
+	@RequestMapping(value="/ui",method={RequestMethod.POST, RequestMethod.GET})
 	public void doService(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		 
@@ -325,9 +325,10 @@ public class CastafioreController implements ResourceLoaderAware, ApplicationCon
 			handleMultipartRequest((HttpServletRequest)request, response);
 		}else if("true".equals(request.getParameter("upload"))){
 			doGeter(request, response);
+			return;
 			
 		}
-		else
+		//else
 		{
 			request.setCharacterEncoding("UTF-8");
 			
@@ -358,6 +359,8 @@ public class CastafioreController implements ResourceLoaderAware, ApplicationCon
 				}
 			}else if((componentId != null && eventId != null)&& applicationInstance == null){
 				script = "alert('Your session has expired. Browser will refresh');window.location.reload( false );";
+			}else if(isMultipart){
+				script = getEngine(request).getJQuery(applicationInstance, "root_" + applicationId, applicationInstance, new ListOrderedMap());
 			}
 			
 			Set<String> requiredScript = applicationInstance.getBufferedResources();
