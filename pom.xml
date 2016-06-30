@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.castafiore</groupId>
-	<artifactId>platform</artifactId>
+	<artifactId>ui</artifactId>
 	<version>0.1.0</version>
 
 	<parent>
@@ -26,22 +26,6 @@
 			<groupId>net.htmlparser.jericho</groupId>
 			<artifactId>jericho-html</artifactId>
 			<version>3.3</version>
-		</dependency>
-		<dependency>
-    <groupId>org.jodd</groupId>
-    <artifactId>jodd-bean</artifactId>
-    <version>3.7.1</version>
-</dependency>
-		
-		<dependency>
-			<groupId>org.jodd</groupId>
-			<artifactId>jodd-core</artifactId>
-			<version>3.7.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jodd</groupId>
-			<artifactId>jodd-mail</artifactId>
-			<version>3.7.1</version>
 		</dependency>
 
 
@@ -77,6 +61,21 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
+		
+				
+
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-core</artifactId>
+			<version>3.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-mail</artifactId>
+			<version>3.7.1</version>
+		</dependency>
+		
+		
 	</dependencies>
 
 	<dependencyManagement>
